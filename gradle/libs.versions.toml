@@ -10,7 +10,7 @@ material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 # add
-webkit = "1.10.0"
+webkit = "1.6.0"
 gson = "2.10.1"
 
 [libraries]

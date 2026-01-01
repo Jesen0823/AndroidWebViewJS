@@ -1,0 +1,210 @@
+kotlin version: 2.0.21
+error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
+File being compiled: D:/Android/AndroidStudioProjects2024/AndroidWebViewJS/app/src/main/java/org/dev/jesen/androidwebviewjs/web/config/WebViewConfig.kt
+The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:65)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:52)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:38)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:27)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:14)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:62)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.invokeCodegen(JvmIrCodegenFactory.kt:371)
+	at org.jetbrains.kotlin.codegen.CodegenFactory.generateModule(CodegenFactory.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.generateModuleInFrontendIRMode(JvmIrCodegenFactory.kt:433)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.generateCodeFromIr(jvmCompilerPipeline.kt:246)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:142)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:148)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:103)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:49)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:360)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:200)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:197)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:712)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:196)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:587)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:828)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:705)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:704)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:configureAppCache visibility:private modality:FINAL <> ($this:org.dev.jesen.androidwebviewjs.web.config.WebViewConfig, webSettings:android.webkit.WebSettings, context:android.content.Context) returnType:kotlin.Unit
+  annotations:
+    Suppress(names = ["DEPRECATION", "UNRESOLVED_REFERENCE", "UNUSED_VARIABLE"])
+  $this: VALUE_PARAMETER name:<this> type:org.dev.jesen.androidwebviewjs.web.config.WebViewConfig
+  VALUE_PARAMETER name:webSettings index:0 type:android.webkit.WebSettings
+  VALUE_PARAMETER name:context index:1 type:android.content.Context
+  BLOCK_BODY
+    TRY type=kotlin.Unit
+      try: BLOCK type=kotlin.Unit origin=null
+        VAR name:setAppCacheEnabledMethod type:@[FlexibleNullability] java.lang.reflect.Method? [val]
+          CALL 'public open fun getMethod (p0: @[FlexibleNullability] kotlin.String?, vararg p1: @[FlexibleNullability] java.lang.Class<*>?): @[FlexibleNullability] java.lang.reflect.Method? declared in java.lang.Class' type=@[FlexibleNullability] java.lang.reflect.Method? origin=null
+            $this: CALL 'public final fun <get-java> <T> (): java.lang.Class<T of kotlin.jvm.JvmClassMappingKt.<get-java>> declared in kotlin.jvm.JvmClassMappingKt' type=java.lang.Class<android.webkit.WebSettings> origin=GET_PROPERTY
+              <T>: android.webkit.WebSettings
+              $receiver: CLASS_REFERENCE 'CLASS IR_EXTERNAL_JAVA_DECLARATION_STUB CLASS name:WebSettings modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<android.webkit.WebSettings>
+            p0: CONST String type=kotlin.String value="setAppCacheEnabled"
+            p1: BLOCK type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? origin=null
+              VAR IR_TEMPORARY_VARIABLE name:tmp0 type:@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? [val]
+                CALL 'public final fun arrayOfNulls <T> (size: kotlin.Int): kotlin.Array<T of kotlin.arrayOfNulls?> declared in kotlin' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? origin=null
+                  <T>: @[FlexibleNullability] java.lang.Class<*>?
+                  size: CONST Int type=kotlin.Int value=1
+              CALL 'public final fun set (index: kotlin.Int, value: T of kotlin.Array): kotlin.Unit [operator] declared in kotlin.Array' type=kotlin.Unit origin=null
+                $this: GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? origin=null
+                index: CONST Int type=kotlin.Int value=0
+                value: CALL 'public final fun <get-javaPrimitiveType> <T> (): java.lang.Class<T of kotlin.jvm.JvmClassMappingKt.<get-javaPrimitiveType>>? declared in kotlin.jvm.JvmClassMappingKt' type=java.lang.Class<kotlin.Boolean>? origin=GET_PROPERTY
+                  <T>: kotlin.Boolean
+                  $receiver: CLASS_REFERENCE 'CLASS IR_EXTERNAL_DECLARATION_STUB CLASS name:Boolean modality:FINAL visibility:public superTypes:[kotlin.Comparable<kotlin.Boolean>; java.io.Serializable]' type=kotlin.reflect.KClass<kotlin.Boolean>
+              GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] java.lang.Class<*>?>? origin=null
+        COMPOSITE type=kotlin.Unit origin=null
+          CALL 'public open fun invoke (p0: @[FlexibleNullability] kotlin.Any?, vararg p1: @[FlexibleNullability] kotlin.Any?): @[FlexibleNullability] kotlin.Any? [operator] declared in java.lang.reflect.Method' type=@[FlexibleNullability] kotlin.Any? origin=null
+            $this: GET_VAR 'val setAppCacheEnabledMethod: @[FlexibleNullability] java.lang.reflect.Method? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] java.lang.reflect.Method? origin=null
+            p0: GET_VAR 'webSettings: android.webkit.WebSettings declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=android.webkit.WebSettings origin=null
+            p1: BLOCK type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? origin=null
+              VAR IR_TEMPORARY_VARIABLE name:tmp0 type:@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? [val]
+                CALL 'public final fun arrayOfNulls <T> (size: kotlin.Int): kotlin.Array<T of kotlin.arrayOfNulls?> declared in kotlin' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? origin=null
+                  <T>: @[FlexibleNullability] kotlin.Any?
+                  size: CONST Int type=kotlin.Int value=1
+              CALL 'public final fun set (index: kotlin.Int, value: T of kotlin.Array): kotlin.Unit [operator] declared in kotlin.Array' type=kotlin.Unit origin=null
+                $this: GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? origin=null
+                index: CONST Int type=kotlin.Int value=0
+                value: CONST Boolean type=kotlin.Boolean value=true
+              GET_VAR 'val tmp0: @[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] @[FlexibleArrayElementVariance] kotlin.Array<out @[FlexibleNullability] kotlin.Any?>? origin=null
+          COMPOSITE type=kotlin.Unit origin=null
+        VAR name:cacheDir type:kotlin.String [val]
+          STRING_CONCATENATION type=kotlin.String
+            CALL 'public open fun getAbsolutePath (): @[FlexibleNullability] kotlin.String? declared in java.io.File' type=@[FlexibleNullability] kotlin.String? origin=GET_PROPERTY
+              $this: CALL 'public abstract fun getCacheDir (): @[FlexibleNullability] java.io.File? declared in android.content.Context' type=@[FlexibleNullability] java.io.File? origin=GET_PROPERTY
+                $this: GET_VAR 'context: android.content.Context declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=android.content.Context origin=null
+            CONST String type=kotlin.String value="/webview_cache"
+        VAR name:appCachePathField type:@[FlexibleNullability] java.lang.reflect.Field? [val]
+          CALL 'public open fun getField (p0: @[FlexibleNullability] kotlin.String?): @[FlexibleNullability] java.lang.reflect.Field? declared in java.lang.Class' type=@[FlexibleNullability] java.lang.reflect.Field? origin=null
+            $this: CALL 'public final fun <get-java> <T> (): java.lang.Class<T of kotlin.jvm.JvmClassMappingKt.<get-java>> declared in kotlin.jvm.JvmClassMappingKt' type=java.lang.Class<android.webkit.WebSettings> origin=GET_PROPERTY
+              <T>: android.webkit.WebSettings
+              $receiver: CLASS_REFERENCE 'CLASS IR_EXTERNAL_JAVA_DECLARATION_STUB CLASS name:WebSettings modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<android.webkit.WebSettings>
+            p0: CONST String type=kotlin.String value="appCachePath"
+        CALL 'public open fun set (p0: @[FlexibleNullability] kotlin.Any?, p1: @[FlexibleNullability] kotlin.Any?): kotlin.Unit [operator] declared in java.lang.reflect.Field' type=kotlin.Unit origin=null
+          $this: GET_VAR 'val appCachePathField: @[FlexibleNullability] java.lang.reflect.Field? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] java.lang.reflect.Field? origin=null
+          p0: GET_VAR 'webSettings: android.webkit.WebSettings declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=android.webkit.WebSettings origin=null
+          p1: GET_VAR 'val cacheDir: kotlin.String [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=kotlin.String origin=null
+        WHEN type=kotlin.Unit origin=IF
+          BRANCH
+            if: CALL 'public final fun less (arg0: kotlin.Int, arg1: kotlin.Int): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=LT
+              arg0: CALL 'public final fun compareTo$default (other: kotlin.String, ignoreCase: kotlin.Boolean, $mask0: kotlin.Int, $handler: kotlin.Any?): kotlin.Int declared in kotlin.text.StringsKt' type=kotlin.Int origin=DEFAULT_DISPATCH_CALL
+                $receiver: ERROR_CALL 'Unresolved reference: <Unresolved name: SDK_INT>#' type=IrErrorType(null)
+                other: ERROR_CALL 'Unresolved reference: <Unresolved name: JELLY_BEAN_MR2>#' type=IrErrorType(null)
+                ignoreCase: COMPOSITE type=kotlin.Boolean origin=DEFAULT_VALUE
+                  CONST Boolean type=kotlin.Boolean value=false
+                $mask0: CONST Int type=kotlin.Int value=2
+                $handler: CONST Null type=kotlin.Any? value=null
+              arg1: CONST Int type=kotlin.Int value=0
+            then: BLOCK type=kotlin.Unit origin=null
+              VAR name:appCacheMaxSizeField type:@[FlexibleNullability] java.lang.reflect.Field? [val]
+                CALL 'public open fun getField (p0: @[FlexibleNullability] kotlin.String?): @[FlexibleNullability] java.lang.reflect.Field? declared in java.lang.Class' type=@[FlexibleNullability] java.lang.reflect.Field? origin=null
+                  $this: CALL 'public final fun <get-java> <T> (): java.lang.Class<T of kotlin.jvm.JvmClassMappingKt.<get-java>> declared in kotlin.jvm.JvmClassMappingKt' type=java.lang.Class<android.webkit.WebSettings> origin=GET_PROPERTY
+                    <T>: android.webkit.WebSettings
+                    $receiver: CLASS_REFERENCE 'CLASS IR_EXTERNAL_JAVA_DECLARATION_STUB CLASS name:WebSettings modality:ABSTRACT visibility:public superTypes:[kotlin.Any]' type=kotlin.reflect.KClass<android.webkit.WebSettings>
+                  p0: CONST String type=kotlin.String value="appCacheMaxSize"
+              CALL 'public open fun set (p0: @[FlexibleNullability] kotlin.Any?, p1: @[FlexibleNullability] kotlin.Any?): kotlin.Unit [operator] declared in java.lang.reflect.Field' type=kotlin.Unit origin=null
+                $this: GET_VAR 'val appCacheMaxSizeField: @[FlexibleNullability] java.lang.reflect.Field? [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=@[FlexibleNullability] java.lang.reflect.Field? origin=null
+                p0: GET_VAR 'webSettings: android.webkit.WebSettings declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=android.webkit.WebSettings origin=null
+                p1: CONST Long type=kotlin.Long value=52428800
+        CALL 'public final fun d (tag: kotlin.String, content: kotlin.String): kotlin.Unit declared in org.dev.jesen.androidwebviewjs.core.utils.LogUtils' type=kotlin.Unit origin=null
+          $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:org.dev.jesen.androidwebviewjs.core.utils.LogUtils visibility:public [final,static] declared in org.dev.jesen.androidwebviewjs.core.utils.LogUtils' type=org.dev.jesen.androidwebviewjs.core.utils.LogUtils origin=null
+          tag: CONST String type=kotlin.String value="WebViewConfig"
+          content: STRING_CONCATENATION type=kotlin.String
+            CONST String type=kotlin.String value="应用缓存配置完成（反射兜底），缓存目录："
+            GET_VAR 'val cacheDir: kotlin.String [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=kotlin.String origin=null
+      CATCH parameter=val e: java.lang.Exception [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache
+        VAR CATCH_PARAMETER name:e type:java.lang.Exception [val]
+        BLOCK type=kotlin.Unit origin=null
+          CALL 'public final fun w (tag: kotlin.String, content: kotlin.String): kotlin.Unit declared in org.dev.jesen.androidwebviewjs.core.utils.LogUtils' type=kotlin.Unit origin=null
+            $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:org.dev.jesen.androidwebviewjs.core.utils.LogUtils visibility:public [final,static] declared in org.dev.jesen.androidwebviewjs.core.utils.LogUtils' type=org.dev.jesen.androidwebviewjs.core.utils.LogUtils origin=null
+            tag: CONST String type=kotlin.String value="WebViewConfig"
+            content: STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="应用缓存配置失败（高版本 SDK 不支持旧 API）："
+              CALL 'public open fun <get-message> (): kotlin.String? [fake_override] declared in java.lang.Exception' type=kotlin.String? origin=GET_PROPERTY
+                $this: GET_VAR 'val e: java.lang.Exception [val] declared in org.dev.jesen.androidwebviewjs.web.config.WebViewConfig.configureAppCache' type=java.lang.Exception origin=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:40)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:406)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:423)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:168)
+	at org.jetbrains.kotlin.backend.jvm.FileCodegen.lower(JvmPhases.kt:39)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseFactoriesKt.createFilePhase$lambda$4(PhaseFactories.kt:71)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt$createSimpleNamedCompilerPhase$1.phaseBody(PhaseBuilders.kt:69)
+	at org.jetbrains.kotlin.backend.common.phaser.SimpleNamedCompilerPhase.phaseBody(CompilerPhase.kt:226)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:62)
+	... 45 more
+Caused by: java.lang.AssertionError: Unexpected IR element found during code generation. Either code generation for it is not implemented, or it should have been lowered:
+ERROR_CALL 'Unresolved reference: <Unresolved name: SDK_INT>#' type=IrErrorType(null)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitElement(ExpressionCodegen.kt:991)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitElement(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitExpression(IrElementVisitor.kt:83)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitErrorExpression(IrElementVisitor.kt:194)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitErrorExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitErrorExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitErrorCallExpression(IrElementVisitor.kt:197)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitErrorCallExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitErrorCallExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrErrorCallExpression.accept(IrErrorCallExpression.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.gen(ExpressionCodegen.kt:217)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrCallGenerator.genValueAndPut(IrCallGenerator.kt:48)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall$handleParameter(ExpressionCodegen.kt:616)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:639)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.intrinsics.PrimitiveComparison.invoke(CompareTo.kt:220)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:600)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitWhen(ExpressionCodegen.kt:1098)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitWhen(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrWhen.accept(IrWhen.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:593)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitBlock(IrElementVisitor.kt:122)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:413)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlock.accept(IrBlock.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitTryWithInfo(ExpressionCodegen.kt:1339)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitTry(ExpressionCodegen.kt:1330)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitTry(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrTry.accept(IrTry.kt:26)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:584)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:240)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:123)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:44)
+	... 55 more
+
+

@@ -27,9 +27,10 @@ android {
             // 发布版关闭WebView调试
             buildConfigField("boolean", "ENABLE_WEBVIEW_DEBUG", "false")
         }
-        debug{
+        debug {
             isDebuggable = true
             applicationIdSuffix = ".debug"
+            buildConfigField("boolean", "ENABLE_WEBVIEW_DEBUG", "true")
         }
     }
     compileOptions {
