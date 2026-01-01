@@ -5,16 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.SimpleWebViewActivity">
-
+    tools:context=".ui.BridgeWebViewActivity">
     <!-- 使用 FrameLayout 包裹 WebView，便于添加加载动画、错误页面等 -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <WebView
             android:id="@+id/webView"
@@ -29,5 +28,4 @@
             android:layout_gravity="center"
             android:visibility="gone" />
     </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

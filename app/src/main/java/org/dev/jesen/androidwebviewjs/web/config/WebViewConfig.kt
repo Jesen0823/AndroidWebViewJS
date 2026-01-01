@@ -34,6 +34,9 @@ object WebViewConfig {
             // 2. JS 配置（基础：启用 JS，支持与原生互调）
             javaScriptEnabled = true // 启用 JavaScript（必要时开启，默认关闭）
             javaScriptCanOpenWindowsAutomatically = true // 允许 JS 打开新窗口
+            // 验证：打印JS权限配置日志
+            LogUtils.d("WebViewConfig", "JS执行权限是否开启：${webSettings.javaScriptEnabled}")
+            LogUtils.d("WebViewConfig", "JS是否允许打开新窗口：${webSettings.javaScriptCanOpenWindowsAutomatically}")
 
             // 3. 缓存配置（基础：启用应用缓存，兼容高低版本）
             cacheMode = WebSettings.LOAD_DEFAULT

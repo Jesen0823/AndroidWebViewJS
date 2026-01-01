@@ -2,7 +2,7 @@
 <!-- WebView 全局静态配置文件 -->
 <webview-settings xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- ********************** 安全相关配置（企业级必备）********************** -->
+    <!-- ********************** 安全相关配置（必备）********************** -->
     <!-- 禁用文件访问（防止恶意文件读取，默认false，推荐显式配置） -->
     <setting android:name="allowFileAccess" android:value="false" />
     <!-- 禁用文件URL访问其他本地文件（Android 4.1+） -->

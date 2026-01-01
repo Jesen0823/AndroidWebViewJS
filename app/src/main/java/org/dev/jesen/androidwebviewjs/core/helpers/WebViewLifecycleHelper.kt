@@ -61,7 +61,7 @@ class WebViewLifecycleHelper(private val webView: WebView) {
 
     /**
      * 对应 Activity/Fragment 的 onDestroy()
-     * 彻底释放 WebView 相关资源，杜绝内存泄漏（企业级核心要求）
+     * 彻底释放 WebView 相关资源，杜绝内存泄漏
      */
     fun onDestroy() {
         if (isDestroyed) {

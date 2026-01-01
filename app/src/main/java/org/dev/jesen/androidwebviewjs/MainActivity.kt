@@ -1,11 +1,13 @@
 package org.dev.jesen.androidwebviewjs
 
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import org.dev.jesen.androidwebviewjs.core.utils.LogUtils
 import org.dev.jesen.androidwebviewjs.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +39,25 @@ class MainActivity : AppCompatActivity() {
         binding.webViewSimpleBtn.setOnClickListener {
             jumpState1ToSimple()
         }
+        binding.webViewJsBtn.setOnClickListener {
+            jumpStage2ToJs()
+        }
+    }
+
+    private fun jumpStage2ToJs() {
+        val intent = Intent()
+        LogUtils.d("MainActivity","jumpStage2ToJs pkgName:${this.packageName}")
+        val componentName = if(BuildConfig.ENABLE_WEBVIEW_DEBUG)ComponentName(
+            "org.dev.jesen.androidwebviewjs.debug",
+            "org.dev.jesen.androidwebviewjs.ui.BridgeWebViewActivity",
+        ) else ComponentName(
+            "org.dev.jesen.androidwebviewjs",
+            "org.dev.jesen.androidwebviewjs.ui.BridgeWebViewActivity",
+        )
+        intent.component = componentName
+        intent.putExtra("title", "Stage2:WebView与JS交互")
+        intent.putExtra("content", "通过 componentName 跳转的简单WebView")
+        startActivity(intent)
     }
 
     private fun jumpState1ToSimple() {

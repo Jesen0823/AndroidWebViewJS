@@ -61,7 +61,7 @@ class SimpleWebViewActivity : AppCompatActivity() {
         webViewLifecycleHelper = WebViewLifecycleHelper(binding.webView)
     }
 
-    // ---------------------- WebView 生命周期管理（企业级规范）----------------------
+    // ---------------------- WebView 生命周期管理----------------------
     override fun onResume() {
         super.onResume()
         webViewLifecycleHelper.onResume() // 恢复 WebView 运行

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>阶段2：原生-JS 互调</title>
+	<style>
+		body{
+			margin: 0;
+			padding: 20px;
+			font-family: "Microsoft YaHei";
+			background-color: #f5f5f5;
+		}
+		.title{
+			font-size: 24px;
+			color: #333;
+			text-align: center;
+			margin-bottom: 30px;
+		}
+		.btn-group{
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+			margin-bottom: 30px;
+		}
+		.btn{
+			padding: 15px;
+			background-color: #00C853;
+			color: #fff;
+			border: none;
+			border-radius: 8px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		 .result {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+	</style>
+</head>
+<body>
+	 <div class="title">原生-JS 互调演示</div>
+    <div class="btn-group">
+        <button class="btn" onclick="getUserInfo()">获取用户信息（JS 调原生）</button>
+        <button class="btn" onclick="openNativePage()">打开原生页面（JS 调原生）</button>
+        <button class="btn" onclick="showToastFromNative()">显示 Toast（原生调 JS）</button>
+    </div>
+    <div class="result" id="result">
+        点击按钮查看结果...
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

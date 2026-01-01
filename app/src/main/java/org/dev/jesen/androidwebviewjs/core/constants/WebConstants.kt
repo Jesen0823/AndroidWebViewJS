@@ -20,6 +20,7 @@ object WebConstants {
 
     // 本地H5路径
     const val LOCAL_HTML_STAGE1 = "file:///android_asset/stage1/index.html"
+    const val LOCAL_HTML_STAGE2 = "file:///android_asset/stage2/index.html"
 
     // WebView缓存目录名称
     const val WEBVIEW_CACHE_DIR = "webview_cache"
