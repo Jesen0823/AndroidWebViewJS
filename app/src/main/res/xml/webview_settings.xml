@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- WebView 全局静态配置文件 -->
+<webview-settings xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ********************** 安全相关配置（企业级必备）********************** -->
+    <!-- 禁用文件访问（防止恶意文件读取，默认false，推荐显式配置） -->
+    <setting android:name="allowFileAccess" android:value="false" />
+    <!-- 禁用文件URL访问其他本地文件（Android 4.1+） -->
+    <setting android:name="allowFileAccessFromFileURLs" android:value="false" />
+    <!-- 禁用文件URL访问任意资源（Android 4.1+） -->
+    <setting android:name="allowUniversalAccessFromFileURLs" android:value="false" />
+    <!-- 禁用混合内容（仅允许HTTPS，Android 7.0+），防止明文数据泄露 -->
+    <setting android:name="mixedContentMode" android:value="2" /> <!-- 2 对应 MIXED_CONTENT_NEVER_ALLOW -->
+    <!-- 启用安全浏览（Android 9.0+），拦截恶意网站、钓鱼网站 -->
+    <setting android:name="safeBrowsingEnabled" android:value="true" />
+
+    <!-- ********************** 基础功能配置 ********************** -->
+    <!-- 启用JavaScript（按需配置，默认false，若需JS互调则开启） -->
+    <setting android:name="javaScriptEnabled" android:value="true" />
+    <!-- 禁止JS自动打开新窗口（防止恶意弹窗，默认false） -->
+    <setting android:name="javaScriptCanOpenWindowsAutomatically" android:value="false" />
+    <!-- 设置默认编码格式为UTF-8 -->
+    <setting android:name="defaultTextEncodingName" android:value="utf-8" />
+    <!-- 启用内置缩放控件（默认false） -->
+    <setting android:name="builtInZoomControls" android:value="true" />
+    <!-- 隐藏缩放控件（美观优化，默认false） -->
+    <setting android:name="displayZoomControls" android:value="false" />
+
+    <!-- ********************** 缓存相关配置（基础全局配置）********************** -->
+    <!-- 启用应用缓存（默认false） -->
+    <setting android:name="appCacheEnabled" android:value="true" />
+    <!-- 缓存模式：默认（有网络时缓存新数据，无网络时加载缓存） -->
+    <setting android:name="cacheMode" android:value="1" /> <!-- 1 对应 LOAD_DEFAULT -->
+    <!-- 自动加载图片（默认true，关闭可提升首屏加载速度） -->
+    <setting android:name="loadsImagesAutomatically" android:value="true" />
+
+</webview-settings>

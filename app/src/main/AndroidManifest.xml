@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- 网络权限（加载网络H5必备） -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 网络状态权限（判断网络类型，优化缓存策略） -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 存储权限（自定义WebView缓存目录，Android 6.0+需动态申请） -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" /> <!-- Android 10+使用分区存储，无需此权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application
+        android:name=".EnterpriseApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,7 +20,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AndroidWebViewJS">
+        android:theme="@style/Theme.AndroidWebViewJS"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="23"> <!-- 允许明文流量（Android 9.0+，调试用，发布版禁用） -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -20,6 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+            <meta-data
+                android:name="android.webkit.WebSettings"
+                android:resource="@xml/webview_settings" />
+            <meta-data
+                android:name="android.webkit.WebView.EnableSafeBrowsing"
+                android:value="true" /> <!-- 启用安全浏览 -->
     </application>
 
 </manifest>
