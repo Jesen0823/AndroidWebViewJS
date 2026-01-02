@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network_security_config xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 基础配置（适配 targetSdk 36） -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- 调试模式允许明文流量（仅 debug 版，release 版禁用） -->
+    <debug-overrides>
+        <base-config cleartextTrafficPermitted="true" />
+    </debug-overrides>
+
+    <!-- 信任的域名（企业级规范，仅允许信任的 HTTPS 域名） -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">baidu.com</domain>
+        <domain includeSubdomains="true">google.com</domain>
+        <domain includeSubdomains="true">github.com</domain>
+    </domain-config>
+</network_security_config>

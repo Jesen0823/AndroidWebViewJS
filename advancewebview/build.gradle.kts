@@ -15,6 +15,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // WebView调试开关（发布版关闭）
+        buildConfigField("boolean", "ENABLE_ADVANCE_DEBUG", "true")
     }
 
     buildTypes {
@@ -24,6 +27,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("boolean", "ENABLE_ADVANCE_DEBUG", "false")
+        }
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
@@ -33,6 +41,14 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    // 资源配置（允许访问assets目录）
+    sourceSets {
+        getByName("main") {
+            assets.srcDirs("src/main/assets")
+        }
+    }
+    viewBinding { enable = true }
+    buildFeatures.buildConfig = true
 }
 
 dependencies {
@@ -45,4 +61,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // WebView 相关（Android自带，无需额外引入，仅需兼容配置）
+    implementation(libs.androidx.webkit) // 官方WebView兼容库
+    // Gson（用于原生-JS通信数据解析）
+    implementation(libs.google.gson)
+
 }
