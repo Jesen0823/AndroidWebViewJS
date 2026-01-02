@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidWebViewJS"
 include(":app")
- 
+include(":advancewebview")
