@@ -11,6 +11,7 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
+    <!-- 允许明文流量（Android 9.0+，调试用，发布版禁用） -->
     <application
         android:name=".EnterpriseApp"
         android:allowBackup="true"
@@ -24,9 +25,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="23">
         <activity
+            android:name=".ui.JsInjectWebViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.BridgeWebViewActivity"
             android:exported="true" />
-        <!-- 允许明文流量（Android 9.0+，调试用，发布版禁用） -->
         <activity
             android:name=".MainActivity"
             android:exported="true">

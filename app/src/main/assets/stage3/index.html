@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>阶段3：JS 注入演示</title>
+	<style>
+		body{
+			margin: 0;
+			padding: 20px;
+			font-family: "Microsoft YaHei";
+			background-color: #f5f5f5;
+		}
+		.title{
+			font-size: 24px;
+			color: #333;
+			text-align: center;
+			margin-bottom: 30px;
+		}
+		.btn-group{
+			display: flex;
+			flex-direction: column;
+			gap: 15px;
+			margin-bottom: 30px;
+		}
+		.btn {
+            padding: 15px;
+            background-color: #00C853;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+            height: 300px;
+            overflow-y: auto;
+        }
+	</style>
+</head>
+<body>
+	 <div class="title">JS 注入演示</div>
+    <div class="btn-group">
+        <button class="btn" onclick="testGlobalTool()">测试全局工具类</button>
+        <button class="btn" onclick="testLocalStorage()">测试本地存储</button>
+        <button class="btn" onclick="testBusinessLogic()">测试业务逻辑</button>
+    </div>
+    <div class="result" id="injectResult">
+        页面加载中，等待 JS 注入...
+    </div>
+
+    <script>
+        const resultDom = document.getElementById("injectResult");
+
+    	/**
+         * 测试全局工具类（由原生注入）
+         */
+        function testGlobalTool() {
+            if (window.GlobalTool) {
+                window.GlobalTool.showToast("测试全局 Toast 方法");
+                window.GlobalTool.log("测试全局 Log 方法");
+                 resultDom.innerHTML += "已调用全局工具类方法<br/>";
+            } else {
+                 resultDom.innerHTML += "错误：未找到 GlobalTool<br/>";
+            }
+        }
+
+        /**
+         * 测试本地存储（由全局工具类提供）
+         */
+        function testLocalStorage() {
+            if (window.GlobalTool) {
+                window.GlobalTool.setStorage("testKey", "testValue_2024");
+                window.GlobalTool.getStorage("testKey");
+                resultDom.innerHTML += "已调用本地存储方法<br/>";
+            } else {
+                resultDom.innerHTML += "错误：未找到 GlobalTool<br/>";
+            }
+        }
+
+        /**
+         * 测试业务逻辑（由原生注入）
+         */
+        function testBusinessLogic() {
+            if (window.BusinessLogic) {
+                window.BusinessLogic.handleBusinessData();
+                resultDom.innerHTML += "已调用业务逻辑方法<br/>";
+            } else {
+                resultDom.innerHTML += "错误：未找到 BusinessLogic<br/>";
+            }
+        }
+    </script>
+</body>
+</html>

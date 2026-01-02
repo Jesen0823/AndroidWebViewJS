@@ -39,6 +39,10 @@ object WebViewConfig {
             LogUtils.d("WebViewConfig", "JS是否允许打开新窗口：${webSettings.javaScriptCanOpenWindowsAutomatically}")
 
             // 3. 缓存配置（基础：启用应用缓存，兼容高低版本）
+            // 正确配置：仅开启DOM存储（支持localStorage/sessionStorage，无需手动配置路径）
+            webSettings.domStorageEnabled = true // 这是启用localStorage的唯一必要条件，编译无报错
+            LogUtils.d("WebViewConfig", "DOM存储已开启（系统自动管理存储路径，无需手动配置）")
+
             cacheMode = WebSettings.LOAD_DEFAULT
             configureAppCache(webSettings, webView.context)
 

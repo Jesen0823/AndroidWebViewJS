@@ -29,28 +29,28 @@
  * @param params 传递参数
  * @param retryCount 剩余重试次数
  */
- function callAndroid(methodName,params,retryCount = 3){
+function callAndroid(methodName,params,retryCount = 3){
     const bridge = getAndroidJsBridge();
     if (bridge) {
-            try {
-                // 确保参数是字符串类型（兼容Kotlin的String参数）
-                const finalParams = typeof params === 'string' ? params : JSON.stringify(params);
-                bridge.callAndroid(methodName, finalParams);
-                updateResult(`已调用原生方法：${methodName}，参数：${finalParams}`);
-            } catch (e) {
-                updateResult(`调用原生方法失败：${e.message}`);
-                console.error("JS调用原生异常：", e);
-            }
+       try {
+          // 确保参数是字符串类型（兼容Kotlin的String参数）
+          const finalParams = typeof params === 'string' ? params : JSON.stringify(params);
+          bridge.callAndroid(methodName, finalParams);
+          updateResult(`已调用原生方法：${methodName}，参数：${finalParams}`);
+       } catch (e) {
+          updateResult(`调用原生方法失败：${e.message}`);
+          console.error("JS调用原生异常：", e);
+       }
+    } else {
+        if (retryCount > 0) {
+            updateResult(`未找到AndroidJsBridge，${retryCount}秒后重试...`);
+            // 延迟1秒重试，给原生接口注入留时间
+            setTimeout(() => callAndroid(methodName, params, retryCount - 1), 1000);
         } else {
-            if (retryCount > 0) {
-                updateResult(`未找到AndroidJsBridge，${retryCount}秒后重试...`);
-                // 延迟1秒重试，给原生接口注入留时间
-                setTimeout(() => callAndroid(methodName, params, retryCount - 1), 1000);
-            } else {
-                updateResult("错误：多次重试后仍未找到AndroidJsBridge");
-                console.error("JS调用原生失败：未找到AndroidJsBridge");
-            }
+            updateResult("错误：多次重试后仍未找到AndroidJsBridge");
+            console.error("JS调用原生失败：未找到AndroidJsBridge");
         }
+    }
  }
 
  /**

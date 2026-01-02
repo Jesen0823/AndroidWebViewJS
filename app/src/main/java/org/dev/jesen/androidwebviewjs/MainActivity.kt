@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import org.dev.jesen.androidwebviewjs.core.utils.LogUtils
 import org.dev.jesen.androidwebviewjs.databinding.ActivityMainBinding
+import org.dev.jesen.androidwebviewjs.ui.JsInjectWebViewActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -42,6 +43,14 @@ class MainActivity : AppCompatActivity() {
         binding.webViewJsBtn.setOnClickListener {
             jumpStage2ToJs()
         }
+        binding.webViewJsInjectBtn.setOnClickListener {
+            jumpStage3ToJsInject()
+        }
+    }
+
+    private fun jumpStage3ToJsInject() {
+        val intent = Intent(this, JsInjectWebViewActivity::class.java)
+        startActivity(intent)
     }
 
     private fun jumpStage2ToJs() {

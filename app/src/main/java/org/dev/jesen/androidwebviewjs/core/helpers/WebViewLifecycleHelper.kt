@@ -1,6 +1,7 @@
 package org.dev.jesen.androidwebviewjs.core.helpers
 
 import android.webkit.WebView
+import org.dev.jesen.androidwebviewjs.core.constants.WebConstants
 import org.dev.jesen.androidwebviewjs.core.utils.LogUtils
 
 /**
@@ -75,7 +76,7 @@ class WebViewLifecycleHelper(private val webView: WebView) {
                 stopLoading()
                 webView.stopLoading()
                 // 移除所有 JS 接口，避免悬空引用导致内存泄漏
-                removeJavascriptInterface("AndroidJsBridge") // 与桥接名称保持一致，可扩展为参数
+                removeJavascriptInterface(WebConstants.JS_BRIDGE_NAME) // 与桥接名称保持一致，可扩展为参数
                 // 清空 WebView 内容，解除页面引用
                 loadUrl("about:blank")
                 // 移除所有子视图，释放布局相关资源

@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import org.dev.jesen.androidwebviewjs.R
 import org.dev.jesen.androidwebviewjs.core.constants.WebConstants
+import org.dev.jesen.androidwebviewjs.core.helpers.JsBridgeHelper
 import org.dev.jesen.androidwebviewjs.core.helpers.WebViewLifecycleHelper
 import org.dev.jesen.androidwebviewjs.core.utils.LogUtils
 import org.dev.jesen.androidwebviewjs.databinding.ActivityBridgeWebViewBinding
@@ -63,17 +64,10 @@ class BridgeWebViewActivity : AppCompatActivity(), JsBridge.OnJsCallNativeListen
      * 初始化 JS 桥接（核心：暴露原生方法给 JS）
      */
     private fun initJsBridge() {
-        jsBridge = JsBridge(this)
-        LogUtils.d("BridgeWebViewActivity", "开始注入JS桥接：${WebConstants.JS_BRIDGE_NAME}")
-        try{
-            // 暴露 JS 桥接给 JS，桥接名称为 WebConstants.JS_BRIDGE_NAM
-            binding.webView.addJavascriptInterface(jsBridge, WebConstants.JS_BRIDGE_NAME)
-            LogUtils.d("BridgeWebViewActivity", "JS桥接注入成功：${WebConstants.JS_BRIDGE_NAME}")
-        }catch (e: Exception){
-            LogUtils.e("BridgeWebViewActivity", "JS桥接注入失败：${e.message}")
-        }
-        // 初始化原生调用 JS 管理类
-        nativeCallJsManager = NativeCallJsManager(binding.webView, jsBridge)
+        // 2. 统一初始化桥接（复用JsBridgeHelper，与阶段3配置一致）
+        val bridgePair = JsBridgeHelper.initBridge(binding.webView, this)
+        jsBridge = bridgePair.first
+        nativeCallJsManager = bridgePair.second
     }
 
     private fun loadLocalHtml() {
@@ -121,7 +115,7 @@ class BridgeWebViewActivity : AppCompatActivity(), JsBridge.OnJsCallNativeListen
     override fun onDestroy() {
         super.onDestroy()
         webViewLifecycleHelper.onDestroy()
-        binding.webView.removeJavascriptInterface(WebConstants.JS_BRIDGE_NAME) // 移除 JS 桥接，避免内存泄漏
+        JsBridgeHelper.removeBridge(binding.webView) // 移除 JS 桥接，避免内存泄漏
         binding.webView.removeAllViews()
         binding.webView.destroy()
     }
