@@ -118,7 +118,7 @@ object WebViewConfig {
         }
 
         // Android 9.0+ 启用安全浏览
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             webSettings.safeBrowsingEnabled = true
         }
     }

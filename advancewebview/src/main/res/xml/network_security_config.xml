@@ -12,7 +12,7 @@
         <base-config cleartextTrafficPermitted="true" />
     </debug-overrides>
 
-    <!-- 信任的域名（企业级规范，仅允许信任的 HTTPS 域名） -->
+    <!-- 信任的域名（规范，仅允许信任的 HTTPS 域名） -->
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">baidu.com</domain>
         <domain includeSubdomains="true">google.com</domain>
