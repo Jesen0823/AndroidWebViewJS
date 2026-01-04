@@ -6,6 +6,8 @@ import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
  * 版本适配工具类（统一处理不同Android版本差异）
  */
 object VersionUtils {
+    // Android 4.4+
+    fun isKitKatOrHigher(): Boolean = AdvanceConstants.SDK_INT >= AdvanceConstants.SDK_KITKAT
     // Android 5.0+（minSdk 21，基础适配）
     fun isLollipopOrHigher(): Boolean = AdvanceConstants.SDK_INT >= AdvanceConstants.SDK_LOLLIPOP
 
@@ -37,4 +39,5 @@ object VersionUtils {
 
     // Android 16.0+（targetSdk 36，最新特性适配）
     fun isVOrHigher(): Boolean = AdvanceConstants.SDK_INT >= AdvanceConstants.SDK_V
+
 }

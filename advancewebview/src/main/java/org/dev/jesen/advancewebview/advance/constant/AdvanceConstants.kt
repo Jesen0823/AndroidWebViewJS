@@ -39,6 +39,7 @@ object AdvanceConstants {
 
     // 7. 版本适配常量（简化版本判断）
     val SDK_INT = Build.VERSION.SDK_INT
+    const val SDK_KITKAT = 19  // Android 4.4
     const val SDK_LOLLIPOP = 21 // Android 5.0
     const val SDK_MARSHMALLOW = 23 // Android 6.0
     const val SDK_N = 24 // Android 7.0
