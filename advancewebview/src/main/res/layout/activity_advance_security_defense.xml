@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.AdvanceSecurityDefenseActivity">
+
+    <EditText
+        android:id="@+id/etTestUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:autofillHints="null"
+        android:inputType="textUri"
+        android:hint="请输入URL检查安全性"
+        app:layout_constraintBottom_toTopOf="@id/btnCheckUrlSafety"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnCheckUrlSafety"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:text="URL安全检测"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etTestUrl"
+        app:layout_constraintBottom_toTopOf="@id/etTestXss"/>
+
+    <EditText
+        android:id="@+id/etTestXss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:autofillHints="null"
+        android:hint="请输入内容过滤XSS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnCheckUrlSafety"
+        app:layout_constraintBottom_toTopOf="@id/btnFilterXssContent"/>
+
+    <Button
+        android:id="@+id/btnFilterXssContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:text="XSS内容过滤"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etTestXss"
+        app:layout_constraintBottom_toTopOf="@id/webView"/>
+
+    <org.dev.jesen.advancewebview.advance.widget.AdvanceWebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFilterXssContent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

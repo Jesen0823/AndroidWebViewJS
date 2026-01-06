@@ -175,7 +175,12 @@ object AdvanceJsInjectManager {
     /**
      * 统一 JS 注入方法（兼容 Android 版本，安全校验，异常处理）
      */
-    private fun injectJs(webView: WebView, jsCode: String, jsName: String) {
+    private fun injectJs(
+        webView: WebView,
+        jsCode: String,
+        jsName: String,
+        callback: ((Boolean) -> Unit)? = null
+    ) {
         // 1. 前置校验
         if (webView.url.isNullOrEmpty()) {
             AdvanceLogUtils.w("AdvanceJsInjectManager", "$jsName 注入失败：WebView 未加载页面")
@@ -191,15 +196,22 @@ object AdvanceJsInjectManager {
             if (VersionUtils.isKitKatOrHigher()) {
                 // Android 4.4+ 推荐使用 evaluateJavascript（异步，无弹窗，返回结果）
                 webView.evaluateJavascript(jsCode) { result ->
-                    AdvanceLogUtils.d("AdvanceJsInjectManager", "$jsName 注入结果：${result ?: "注入成功（无返回值）"}")
+                    val success = result !=null && !result.contains("error")
+                    callback?.invoke(success)
+                    AdvanceLogUtils.d(
+                        "AdvanceJsInjectManager",
+                        "$jsName 注入结果：${result ?: "注入成功（无返回值）"}"
+                    )
                 }
             } else {
                 // 低版本兼容（minSdk 21，此处仅作占位）
                 webView.loadUrl("javascript:$jsCode")
+                callback?.invoke(true)
                 AdvanceLogUtils.d("AdvanceJsInjectManager", "$jsName 注入完成（低版本兼容）")
             }
         } catch (e: Exception) {
             AdvanceLogUtils.e("AdvanceJsInjectManager", "$jsName 注入异常：${e.message}", e)
+            callback?.invoke(false)
             // 注入失败时回显到 H5 页面，提升用户体验
             webView.evaluateJavascript("javascript:document.getElementById('advanceInjectResult').innerHTML += '$jsName 注入异常：${e.message}<br/>'") {}
         }

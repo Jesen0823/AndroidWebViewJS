@@ -32,10 +32,21 @@ object AdvanceConstants {
 
     // 5. 本地 H5 路径（assets/advance 目录）
     const val LOCAL_HTML_BASIC = "file:///android_asset/advance/basic/index.html"
+    const val LOCAL_HTML_PERFORMANCE = "file:///android_asset/advance/performance/index.html"
+    const val LOCAL_HTML_CACHE = "file:///android_asset/advance/cache/index.html"
+    const val LOCAL_HTML_SECURITY = "file:///android_asset/advance/security/index.html"
 
     // 6. 网络配置（HTTPS 优先，适配 targetSdk 36）
     const val HTTPS_TEST_URL = "https://www.baidu.com"
     const val WEBVIEW_LOAD_TIMEOUT = 15 * 1000L // 15秒超时
+
+    // 安全 URL 白名单（仅允许信任的域名）
+    val SAFE_DOMAIN_WHITELIST = listOf(
+        "baidu.com",
+        "google.com",
+        "github.com",
+        "localhost"
+    )
 
     // 7. 版本适配常量（简化版本判断）
     val SDK_INT = Build.VERSION.SDK_INT

@@ -1,0 +1,75 @@
+@import url("../basic/style.css");
+
+.input-area {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.input-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e4e7ed;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+.input-control:focus {
+    outline: none;
+    border-color: #1f6fff;
+    box-shadow: 0 0 0 2px rgba(31, 111, 255, 0.1);
+}
+
+.security-alert {
+    background-color: #fff6f6;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #ffccc7;
+    margin-bottom: 20px;
+}
+
+.security-alert .alert-title {
+    color: #f53f3f;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.security-alert .alert-content {
+    color: #f53f3f;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.security-success {
+    background-color: #f0fff4;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #b7eb8f;
+    margin-bottom: 20px;
+}
+
+.security-success .success-title {
+    color: #00b42a;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.security-success .success-content {
+    color: #00b42a;
+    font-size: 13px;
+    line-height: 1.6;
+}

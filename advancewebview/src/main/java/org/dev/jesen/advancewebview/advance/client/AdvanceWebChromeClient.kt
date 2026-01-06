@@ -8,7 +8,7 @@ import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
  * 自定义 WebChromeClient（独立封装，性能优化+用户交互）
  * 职责：处理页面加载进度、弹窗、标题更新，适配不同版本交互差异
  */
-class AdvanceWebChromeClient: WebChromeClient() {
+open class AdvanceWebChromeClient: WebChromeClient() {
     // 页面加载进度回调（性能优化：更新进度条，提升用户体验）
     override fun onProgressChanged(view: WebView?, newProgress: Int) {
         super.onProgressChanged(view, newProgress)

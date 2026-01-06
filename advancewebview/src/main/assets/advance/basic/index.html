@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advance WebView - 基础功能测试</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="header">
+    <h1>Advance WebView</h1>
+    <p>基础功能测试：JS 注入 + 原生-JS 互调</p>
+</div>
+
+<div class="card">
+    <div class="card-title">功能操作</div>
+    <div class="btn-group">
+        <button class="btn" onclick="callShowToast()">显示 Toast（调用原生）</button>
+        <button class="btn" onclick="callGetDeviceInfo()">获取设备信息（调用原生）</button>
+        <button class="btn" onclick="callSetStorage()">设置本地存储</button>
+        <button class="btn" onclick="callGetStorage()">获取本地存储</button>
+        <button class="btn" onclick="callClearCache()">清理缓存（调用原生）</button>
+        <button class="btn btn-secondary" onclick="clearResultArea()">清空结果区域</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">执行结果</div>
+    <div id="advanceInjectResult" class="result-area">
+        <p class="info">页面加载完成，等待执行操作...</p>
+    </div>
+</div>
+
+<div class="footer">
+    © 2024 Advance Enterprise WebView | 企业级 WebView 封装方案
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

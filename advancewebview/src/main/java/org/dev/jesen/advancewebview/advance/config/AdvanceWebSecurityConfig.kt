@@ -16,20 +16,13 @@ import org.dev.jesen.advancewebview.advance.helper.VersionUtils
 import java.net.URL
 import java.util.regex.Pattern
 import androidx.core.net.toUri
+import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
 
 /**
  * AdvanceWebView 安全配置类（安全防御，版本适配+XSS/中间人防护）
  * 职责：禁用危险属性、校验URL安全、防御XSS攻击、适配高版本安全特性
  */
 object AdvanceWebSecurityConfig {
-    // 安全 URL 白名单（仅允许信任的域名）
-    private val SAFE_DOMAIN_WHITELIST = listOf(
-        "baidu.com",
-        "google.com",
-        "github.com",
-        "localhost"
-    )
-
     // XSS攻击关键字过滤（简单版，可使用专业库）
     private val XSS_PATTERN = Pattern.compile(
         "<script.*?>.*?</script>|javascript:|onclick|onload|onerror|eval\\(|alert\\(|confirm\\(",
@@ -148,7 +141,7 @@ object AdvanceWebSecurityConfig {
         return try {
             val urlObj = URL(url)
             val host = urlObj.host ?: return false
-            val isSafeDomain = SAFE_DOMAIN_WHITELIST.any { host.endsWith(it) }
+            val isSafeDomain = AdvanceConstants.SAFE_DOMAIN_WHITELIST.any { host.endsWith(it) }
             if (!isSafeDomain) {
                 AdvanceLogUtils.w("AdvanceSecurityConfig", "URL 安全校验失败：非信任域名 $host")
             }

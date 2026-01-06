@@ -7,13 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".AdvanceMainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/btnBasicFunction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="WebView基础功能!"
+        app:layout_constraintBottom_toTopOf="@id/btnPerformanceOpt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <Button
+        android:id="@+id/btnPerformanceOpt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WebView性能优化!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnCacheStrategy"
+        app:layout_constraintTop_toBottomOf="@id/btnBasicFunction" />
+
+    <Button
+        android:id="@+id/btnCacheStrategy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WebView缓存优化!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnSecurityDefense"
+        app:layout_constraintTop_toBottomOf="@id/btnPerformanceOpt" />
+
+    <Button
+        android:id="@+id/btnSecurityDefense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WebView安全防护!"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnCacheStrategy"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advance WebView - 性能优化测试</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="header">
+    <h1>Advance Enterprise WebView</h1>
+    <p>性能优化测试：硬件加速 + 图片加载 + 内存管理</p>
+</div>
+
+<div class="card">
+    <div class="card-title">页面加载进度</div>
+    <div class="progress-container">
+        <p>当前加载进度：<span id="loadProgress">0%</span></p>
+        <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">性能指标</div>
+    <div class="perf-metrics">
+        <div class="metric-card">
+            <div class="metric-title">渲染模式</div>
+            <div id="renderMode" class="metric-value">未知</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">图片加载状态</div>
+            <div id="imageState" class="metric-value">未知</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">首屏加载时间</div>
+            <div id="firstLoadTime" class="metric-value">计算中...</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-title">缓存模式</div>
+            <div id="cacheMode" class="metric-value">未知</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">图片加载测试（切换按钮可控制启用/禁用）</div>
+    <div class="image-test-area">
+        <img src="https://picsum.photos/400/300?random=1" class="test-image" alt="测试图片1" onload="logImageLoad(1)">
+        <img src="https://picsum.photos/400/300?random=2" class="test-image" alt="测试图片2" onload="logImageLoad(2)">
+        <img src="https://picsum.photos/400/300?random=3" class="test-image" alt="测试图片3" onload="logImageLoad(3)">
+        <img src="https://picsum.photos/400/300?random=4" class="test-image" alt="测试图片4" onload="logImageLoad(4)">
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">性能日志</div>
+    <div id="advanceInjectResult" class="result-area">
+        <p class="info">页面加载完成，等待监控性能指标...</p>
+    </div>
+</div>
+
+<div class="footer">
+    © 2024 Advance Enterprise WebView | 企业级 WebView 性能优化方案
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

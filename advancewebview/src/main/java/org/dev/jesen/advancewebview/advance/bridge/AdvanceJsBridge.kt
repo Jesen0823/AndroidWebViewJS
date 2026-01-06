@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import org.dev.jesen.advancewebview.advance.config.AdvanceWebSecurityConfig
 import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
 import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
+import org.dev.jesen.advancewebview.advance.helper.AdvanceThreadHelper
 import org.dev.jesen.advancewebview.advance.helper.VersionUtils
 
 /**
@@ -30,12 +31,15 @@ class AdvanceJsBridge(private val onJsCallNativeListener: OnJsCallNativeListener
      * 所有 JS 调用原生都通过此方法分发，便于统一校验和管理
      */
     @JavascriptInterface
-    fun callAdvanceAndroid(methodName: String, params: String){
+    fun callAdvanceAndroid(methodName: String, params: String) {
         // 安全校验：过滤 XSS 关键字，防止恶意调用
         val safeMethodName = AdvanceWebSecurityConfig.filterXssContent(methodName)
         val safeParams = AdvanceWebSecurityConfig.filterXssContent(params)
 
-        AdvanceLogUtils.d("AdvanceJsBridge", "JS 调用原生：methodName=$safeMethodName, params=$safeParams")
+        AdvanceLogUtils.d(
+            "AdvanceJsBridge",
+            "JS 调用原生：methodName=$safeMethodName, params=$safeParams"
+        )
 
         // 方法分发（白名单机制，仅允许信任的方法，安全防御）
         when (safeMethodName) {
@@ -67,16 +71,21 @@ class AdvanceJsBridge(private val onJsCallNativeListener: OnJsCallNativeListener
         val safeMethodName = AdvanceWebSecurityConfig.filterXssContent(methodName)
         val safeParams = AdvanceWebSecurityConfig.filterXssContent(params)
 
-        // 兼容 Android 4.4+（minSdk 21，此处简化为 4.4+ 适配）
-        if (VersionUtils.isKitKatOrHigher()) {
-            // Android 4.4+ 推荐使用 evaluateJavascript（异步，无弹窗，返回结果）
-            webView.evaluateJavascript("javascript:${AdvanceConstants.NATIVE_METHOD_CALL_JS}('$safeMethodName', '$safeParams')") { result ->
-                AdvanceLogUtils.d("AdvanceJsBridge", "原生调用 JS 结果：${result ?: "注入成功（无返回值）"}")
+        AdvanceThreadHelper.runOnMainThread(webView.context) {
+            // 兼容 Android 4.4+（minSdk 21，此处简化为 4.4+ 适配）
+            if (VersionUtils.isKitKatOrHigher()) {
+                // Android 4.4+ 推荐使用 evaluateJavascript（异步，无弹窗，返回结果）
+                webView.evaluateJavascript("javascript:${AdvanceConstants.NATIVE_METHOD_CALL_JS}('$safeMethodName', '$safeParams')") { result ->
+                    AdvanceLogUtils.d(
+                        "AdvanceJsBridge",
+                        "原生调用 JS 结果：${result ?: "注入成功（无返回值）"}"
+                    )
+                }
+            } else {
+                // 低版本兼容（minSdk 21，此处仅作占位，实际无需处理）
+                webView.loadUrl("javascript:${AdvanceConstants.NATIVE_METHOD_CALL_JS}('$safeMethodName', '$safeParams')")
+                AdvanceLogUtils.d("AdvanceJsBridge", "原生调用 JS 完成（低版本兼容）")
             }
-        } else {
-            // 低版本兼容（minSdk 21，此处仅作占位，实际无需处理）
-            webView.loadUrl("javascript:${AdvanceConstants.NATIVE_METHOD_CALL_JS}('$safeMethodName', '$safeParams')")
-            AdvanceLogUtils.d("AdvanceJsBridge", "原生调用 JS 完成（低版本兼容）")
         }
     }
 }

@@ -12,6 +12,7 @@ import org.dev.jesen.advancewebview.advance.config.AdvanceWebCacheConfig
 import org.dev.jesen.advancewebview.advance.config.AdvanceWebSecurityConfig
 import org.dev.jesen.advancewebview.advance.config.AdvanceWebViewConfig
 import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
+import org.dev.jesen.advancewebview.advance.helper.AdvanceThreadHelper
 import org.dev.jesen.advancewebview.advance.helper.VersionUtils
 import org.dev.jesen.advancewebview.advance.helper.WebViewLifecycleHelper
 import org.dev.jesen.advancewebview.advance.inject.AdvanceJsInjectManager
@@ -52,7 +53,7 @@ class AdvanceWebView @JvmOverloads constructor(
         AdvanceWebViewConfig.initCoreConfig(this, context)
         AdvanceWebCacheConfig.initCacheConfig(this, context)
         AdvanceWebSecurityConfig.initSecurityConfig(this, context)
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "核心配置初始化完成（兼容 Android 5.0+ 到 16.0）")
+        AdvanceLogUtils.d("AdvanceWebView", "核心配置初始化完成（兼容 Android 5.0+ 到 16.0）")
     }
 
     /**
@@ -61,7 +62,7 @@ class AdvanceWebView @JvmOverloads constructor(
     private fun setCustomClients() {
         this.webViewClient = AdvanceWebViewClient()
         this.webChromeClient = AdvanceWebChromeClient()
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "自定义客户端设置完成")
+        AdvanceLogUtils.d("AdvanceWebView", "自定义客户端设置完成")
     }
 
     /**
@@ -70,10 +71,10 @@ class AdvanceWebView @JvmOverloads constructor(
     private fun enableHardwareAcceleration() {
         if (VersionUtils.isLollipopOrHigher()) {
             this.setLayerType(LAYER_TYPE_HARDWARE, null)
-            AdvanceLogUtils.d("AdvanceEnterpriseWebView", "硬件加速已启用（Android 5.0+）")
+            AdvanceLogUtils.d("AdvanceWebView", "硬件加速已启用（Android 5.0+）")
         } else {
             this.setLayerType(LAYER_TYPE_SOFTWARE, null)
-            AdvanceLogUtils.d("AdvanceEnterpriseWebView", "软件渲染已启用（低版本兼容）")
+            AdvanceLogUtils.d("AdvanceWebView", "软件渲染已启用（低版本兼容）")
         }
     }
 
@@ -85,7 +86,7 @@ class AdvanceWebView @JvmOverloads constructor(
         val bridgePair = AdvanceJsBridgeHelper.initBridge(this, listener)
         this.jsBridge = bridgePair.first
         this.nativeCallJsManager = bridgePair.second
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "JS 桥接初始化完成")
+        AdvanceLogUtils.d("AdvanceWebView", "JS 桥接初始化完成")
     }
 
     /**
@@ -94,13 +95,13 @@ class AdvanceWebView @JvmOverloads constructor(
     fun loadAdvancePage(url: String) {
         // 1. 安全校验：拦截非法 URL
         if (!AdvanceWebSecurityConfig.checkUrlSafety(url)) {
-            AdvanceLogUtils.e("AdvanceEnterpriseWebView", "页面加载失败：非法 URL $url")
+            AdvanceLogUtils.e("AdvanceWebView", "页面加载失败：非法 URL $url")
             return
         }
 
         // 2. 加载页面（按 URL 类型处理）
         this.loadUrl(url)
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "页面加载中：$url")
+        AdvanceLogUtils.d("AdvanceWebView", "页面加载中：$url")
     }
 
     /**
@@ -108,7 +109,7 @@ class AdvanceWebView @JvmOverloads constructor(
      */
     fun injectGlobalToolJs() {
         AdvanceJsInjectManager.injectGlobalToolJs(this)
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "全局工具类 JS 注入完成")
+        AdvanceLogUtils.d("AdvanceWebView", "全局工具类 JS 注入完成")
     }
 
     /**
@@ -117,15 +118,17 @@ class AdvanceWebView @JvmOverloads constructor(
     fun injectBusinessJs(businessData: String) {
         val safeData = AdvanceWebSecurityConfig.filterXssContent(businessData)
         AdvanceJsInjectManager.injectBusinessJs(this, safeData)
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "业务逻辑 JS 注入完成")
+        AdvanceLogUtils.d("AdvanceWebView", "业务逻辑 JS 注入完成")
     }
 
     /**
      * 清理所有缓存（对外暴露 API，企业级规范）
      */
     fun clearAllAdvanceCache() {
-        AdvanceWebCacheConfig.clearAllCache(this, context)
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "所有缓存已清理完成")
+        AdvanceThreadHelper.runOnMainThread(context) {
+            AdvanceWebCacheConfig.clearAllCache(this, context)
+        }
+        AdvanceLogUtils.d("AdvanceWebView", "所有缓存已清理完成")
     }
 
     /**
@@ -147,6 +150,6 @@ class AdvanceWebView @JvmOverloads constructor(
         this.removeAllViews()
         // 4. 销毁 WebView
         this.destroy()
-        AdvanceLogUtils.d("AdvanceEnterpriseWebView", "WebView 已销毁，所有资源释放完成")
+        AdvanceLogUtils.d("AdvanceWebView", "WebView 已销毁，所有资源释放完成")
     }
 }

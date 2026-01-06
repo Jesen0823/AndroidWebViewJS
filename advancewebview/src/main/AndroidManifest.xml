@@ -1,59 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- 1. 网络权限（必备，适配 Android 5.0+） -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- 2. 存储权限（Android 10-，10+ 无需） -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 2. 存储权限（Android 10-，10+ 无需） -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
-
-    <!-- 3. 硬件加速（性能优化，适配 Android 5.0+） -->
+        android:maxSdkVersion="28" /> <!-- 3. 硬件加速（性能优化，适配 Android 5.0+） -->
     <uses-feature
         android:name="android.hardware.graphics.opengl"
-        android:required="false" />
-
-    <!-- 11. 包可见性配置（适配 Android 11.0+，WebView 相关） -->
+        android:required="false" /> <!-- 11. 包可见性配置（适配 Android 11.0+，WebView 相关） -->
     <queries>
+
         <!-- 1. 声明访问系统 WebView 组件（必须，确保 WebView 正常工作） -->
         <package android:name="com.android.webview" />
 
         <!-- 2. 声明访问 HTTPS 链接的 Intent（支持 WebView 跳转外部浏览器/其他应用） -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="https" />
         </intent>
 
         <!-- 3. 可选：声明访问 HTTP 链接（调试/兼容旧资源，release 版建议仅保留 HTTPS） -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="http" />
         </intent>
 
         <!-- 4. 可选：声明访问本地文件（支持 WebView 加载 assets/本地缓存文件） -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
+
             <data android:scheme="file" />
         </intent>
     </queries>
 
-    <!-- android:hardwareAccelerated="true" 全局硬件加速（性能优化） -->
     <application
         android:name=".AdvanceApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/Theme.AndroidWebViewJS"
-        android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="24">
+        <activity
+            android:name=".ui.AdvanceSecurityDefenseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AdvanceCacheStrategyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AdvancePerformanceOptActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AdvanceBasicFunctionActivity"
+            android:exported="false" />
 
         <!-- 4. WebView 相关 meta-data（适配高版本） -->
         <meta-data
@@ -62,7 +71,6 @@
         <meta-data
             android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" /> <!-- 启用安全浏览 -->
-
         <!-- 5. FileProvider（适配 Android 7.0+ 文件共享） -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -79,6 +87,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

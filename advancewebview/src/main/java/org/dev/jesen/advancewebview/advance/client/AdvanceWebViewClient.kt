@@ -16,7 +16,7 @@ import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
  * 自定义 WebViewClient（独立封装，版本适配+缓存+安全）
  * 职责：处理页面加载状态、URL 拦截、资源加载、安全校验，适配不同版本回调差异
  */
-class AdvanceWebViewClient: WebViewClient() {
+open class AdvanceWebViewClient: WebViewClient() {
 
     /**
      * 页面开始加载时回调（缓存策略切换+安全校验）

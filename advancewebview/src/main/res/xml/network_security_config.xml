@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<network_security_config xmlns:android="http://schemas.android.com/apk/res/android">
+<network-security-config xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 基础配置（适配 targetSdk 36） -->
     <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
@@ -18,4 +18,4 @@
         <domain includeSubdomains="true">google.com</domain>
         <domain includeSubdomains="true">github.com</domain>
     </domain-config>
-</network_security_config>
+</network-security-config>
