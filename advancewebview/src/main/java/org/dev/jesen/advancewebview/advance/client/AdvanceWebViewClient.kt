@@ -3,7 +3,6 @@ package org.dev.jesen.advancewebview.advance.client
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Build
-import android.webkit.SafeBrowsingResponse
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest

@@ -1,24 +1,16 @@
 package org.dev.jesen.advancewebview.advance.config
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
-import android.webkit.SafeBrowsingResponse
-import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import org.dev.jesen.advancewebview.advance.client.AdvanceWebViewClient
 import androidx.webkit.WebSettingsCompat
-import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
 import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
 import org.dev.jesen.advancewebview.advance.helper.VersionUtils
 import java.net.URL
 import java.util.regex.Pattern
-import androidx.core.net.toUri
-import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
 
 /**
  * AdvanceWebView 安全配置类（安全防御，版本适配+XSS/中间人防护）
