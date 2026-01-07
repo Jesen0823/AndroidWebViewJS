@@ -173,4 +173,32 @@ object AdvanceWebViewConfig {
         webView.settings.javaScriptEnabled = enable
         AdvanceLogUtils.d("AdvanceWebViewConfig", "WebView JS 状态：${if (enable) "启用" else "禁用"}")
     }
+
+    /**
+     * 启用 WebView 焦点管理（确保输入元素能获取焦点和软键盘输入）
+     * @param enable 是否启用焦点管理
+     */
+    fun enableFocusManagement(webView: WebView, enable: Boolean) {
+        if (enable) {
+            webView.apply {
+                // 设置WebView可以获取焦点，但不强制拦截触摸事件
+                isFocusable = true
+                isFocusableInTouchMode = true
+                
+                // 移除之前的触摸事件监听器，让WebView默认处理焦点
+                // WebView会自动在点击输入元素时获取焦点和弹出软键盘
+                setOnTouchListener(null)
+                
+                // 键盘事件处理：让WebView优先处理
+                setOnKeyListener { v, keyCode, event -> false }
+            }
+            AdvanceLogUtils.d("AdvanceWebViewConfig", "WebView 焦点管理已启用")
+        } else {
+            webView.apply {
+                isFocusable = false
+                isFocusableInTouchMode = false
+            }
+            AdvanceLogUtils.d("AdvanceWebViewConfig", "WebView 焦点管理已禁用")
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package org.dev.jesen.advancewebview.advance.config
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.webkit.SafeBrowsingResponse
@@ -8,6 +9,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.dev.jesen.advancewebview.advance.client.AdvanceWebViewClient
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
@@ -58,23 +60,7 @@ object AdvanceWebSecurityConfig {
             // 使用AndroidX WebSettingsCompat配置安全浏览，避免直接调用高版本API
             WebSettingsCompat.setSafeBrowsingEnabled(webSettings, true)
             AdvanceLogUtils.d("AdvanceSecurityConfig", "已启用 WebView 安全浏览（Android 8.0+，兼容targetSdk=36）")
-
-            // 安全浏览回调（处理恶意网站，AndroidX WebViewCompat兼容实现）
-            webView.webViewClient = object : WebViewClient() {
-                    override fun onSafeBrowsingHit(
-                        view: WebView?,
-                        request: android.webkit.WebResourceRequest?,
-                        threatType: Int,
-                        callback: android.webkit.SafeBrowsingResponse?
-                    ) {
-                        super.onSafeBrowsingHit(view, request, threatType, callback)
-                        AdvanceLogUtils.w("AdvanceSecurityConfig", "检测到恶意网站，威胁类型：$threatType")
-                        // 阻止加载恶意网站，返回安全页面（规范）
-                        if (VersionUtils.isPieOrHigher()) {
-                            callback?.backToSafety(true)
-                        }
-                    }
-            }
+            // 安全浏览回调已集成到AdvanceWebViewClient基类中，无需额外配置
         }
 
         // Android 9.0+ 禁止明文流量（强制 HTTPS，防止中间人攻击）

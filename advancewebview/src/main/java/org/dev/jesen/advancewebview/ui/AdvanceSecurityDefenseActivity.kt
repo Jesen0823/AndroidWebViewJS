@@ -69,16 +69,17 @@ class AdvanceSecurityDefenseActivity : AppCompatActivity() , AdvanceJsBridge.OnJ
      */
     private fun injectSecurityTestBusinessJs() {
         val safeBrowsingEnabled =  if(VersionUtils.isOreoOrHigher()) mWebView.settings.safeBrowsingEnabled else false
-        val securityConfigData = AdvanceJsBridgeHelper.toJson(
-            mapOf(
-                "safeDomainWhitelist" to AdvanceConstants.SAFE_DOMAIN_WHITELIST.joinToString(","),
-                "xssFilterEnabled" to "true",
-                "fileAccessEnabled" to "false",
-                "mixedContentEnabled" to "false",
-                "safeBrowsingEnabled" to safeBrowsingEnabled.toString()
-            )
+        val securityConfig = mapOf(
+            "safeDomainWhitelist" to AdvanceConstants.SAFE_DOMAIN_WHITELIST.joinToString(","),
+            "xssFilterEnabled" to "true",
+            "fileAccessEnabled" to "false",
+            "mixedContentEnabled" to "false",
+            "safeBrowsingEnabled" to safeBrowsingEnabled.toString()
         )
+        val securityConfigData = AdvanceJsBridgeHelper.toJson(securityConfig)
         mWebView.injectBusinessJs(securityConfigData)
+        // 使用新方法通知 JS 更新安全配置
+        mWebView.nativeCallJsManager.updateSecurityConfig(securityConfig)
     }
 
     /**
@@ -98,7 +99,13 @@ class AdvanceSecurityDefenseActivity : AppCompatActivity() , AdvanceJsBridge.OnJ
             val tip = if (isSafe) "URL 安全（信任域名/协议）" else "URL 危险（非法域名/协议/路径）"
             Toast.makeText(this, tip, Toast.LENGTH_SHORT).show()
             // 通知 JS URL 校验结果
-            mWebView.nativeCallJsManager.notifyCacheState("URL 校验结果：$tip（原生主动触发）")
+            mWebView.nativeCallJsManager.notifyUrlCheckResult(
+                mapOf(
+                    "url" to testUrl,
+                    "valid" to isSafe,
+                    "message" to tip
+                )
+            )
         }
 
         binding.btnFilterXssContent.setOnClickListener {
@@ -106,7 +113,7 @@ class AdvanceSecurityDefenseActivity : AppCompatActivity() , AdvanceJsBridge.OnJ
             val filteredContent = AdvanceWebSecurityConfig.filterXssContent(testContent)
             Toast.makeText(this, "XSS 内容已过滤，可查看 H5 结果区域", Toast.LENGTH_SHORT).show()
             // 传递过滤后的内容给 JS
-            mWebView.nativeCallJsManager.sendDeviceInfo(
+            mWebView.nativeCallJsManager.notifyXssFilterResult(
                 mapOf(
                     "originalContent" to testContent,
                     "filteredContent" to filteredContent

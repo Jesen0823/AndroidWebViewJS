@@ -44,6 +44,8 @@ class AdvanceWebView @JvmOverloads constructor(
         setCustomClients()
         // 3. 启用硬件加速（性能优化，版本适配）
         enableHardwareAcceleration()
+        // 4. 焦点管理配置（使用模块化配置，确保输入元素能获取焦点和软键盘输入）
+        AdvanceWebViewConfig.enableFocusManagement(this, true)
     }
 
     /**

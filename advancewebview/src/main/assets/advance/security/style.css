@@ -1,5 +1,6 @@
 @import url("../basic/style.css");
 
+/* 基础布局类 - BEM 规范 */
 .input-area {
     margin-bottom: 20px;
 }
@@ -24,6 +25,7 @@
     font-size: 14px;
     color: #333;
     transition: border-color 0.3s ease;
+    box-sizing: border-box; /* 新增：防止宽度溢出 */
 }
 
 .input-control:focus {
@@ -32,6 +34,7 @@
     box-shadow: 0 0 0 2px rgba(31, 111, 255, 0.1);
 }
 
+/* 提示框样式 - 统一命名 */
 .security-alert {
     background-color: #fff6f6;
     border-radius: 8px;
@@ -40,14 +43,14 @@
     margin-bottom: 20px;
 }
 
-.security-alert .alert-title {
+.security-alert__title { /* BEM 块-元素 */
     color: #f53f3f;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
-.security-alert .alert-content {
+.security-alert__content {
     color: #f53f3f;
     font-size: 13px;
     line-height: 1.6;
@@ -61,15 +64,28 @@
     margin-bottom: 20px;
 }
 
-.security-success .success-title {
+.security-success__title {
     color: #00b42a;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
-.security-success .success-content {
+.security-success__content {
     color: #00b42a;
     font-size: 13px;
     line-height: 1.6;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+    .input-area {
+        margin-bottom: 16px;
+    }
+    .card {
+        padding: 16px;
+    }
+    .btn {
+        width: 100%; /* 移动端按钮全屏 */
+    }
 }

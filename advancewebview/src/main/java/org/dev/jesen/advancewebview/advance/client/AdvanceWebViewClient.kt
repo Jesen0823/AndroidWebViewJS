@@ -3,6 +3,7 @@ package org.dev.jesen.advancewebview.advance.client
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Build
+import android.webkit.SafeBrowsingResponse
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -11,6 +12,7 @@ import android.webkit.WebViewClient
 import org.dev.jesen.advancewebview.advance.config.AdvanceWebCacheConfig
 import org.dev.jesen.advancewebview.advance.config.AdvanceWebSecurityConfig
 import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
+import org.dev.jesen.advancewebview.advance.helper.VersionUtils
 
 /**
  * 自定义 WebViewClient（独立封装，版本适配+缓存+安全）
@@ -100,5 +102,22 @@ open class AdvanceWebViewClient: WebViewClient() {
         AdvanceLogUtils.e("AdvanceWebViewClient", "SSL 证书校验失败：${error?.toString()}")
         // 企业级规范：默认拒绝加载，避免中间人攻击（自签名证书需单独配置白名单）
         handler?.cancel()
+    }
+
+    /**
+     * 安全浏览回调（检测恶意网站，Android 8.0+）
+     */
+    override fun onSafeBrowsingHit(
+        view: WebView?,
+        request: android.webkit.WebResourceRequest?,
+        threatType: Int,
+        callback: android.webkit.SafeBrowsingResponse?
+    ) {
+        super.onSafeBrowsingHit(view, request, threatType, callback)
+        AdvanceLogUtils.w("AdvanceWebViewClient", "检测到恶意网站，威胁类型：$threatType")
+        // 阻止加载恶意网站，返回安全页面（企业级规范）
+        if (VersionUtils.isPieOrHigher()) {
+            callback?.backToSafety(true)
+        }
     }
 }

@@ -18,6 +18,9 @@ object AdvanceConstants {
     const val NATIVE_METHOD_CALL_JS = "callAdvanceJs"
     const val NATIVE_METHOD_UPDATE_UI = "updateAdvanceUi"
     const val NATIVE_METHOD_NOTIFY_CACHE = "notifyAdvanceCacheState"
+    const val NATIVE_METHOD_UPDATE_SECURITY_CONFIG = "updateSecurityConfig"
+    const val NATIVE_METHOD_NOTIFY_URL_CHECK = "notifyUrlCheckResult"
+    const val NATIVE_METHOD_NOTIFY_XSS_FILTER = "notifyXssFilterResult"
 
     // 3. JS 注入模块配置
     const val INJECT_MODULE_GLOBAL_TOOL = "AdvanceGlobalTool"
