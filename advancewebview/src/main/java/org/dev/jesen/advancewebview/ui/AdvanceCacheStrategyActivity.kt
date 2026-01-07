@@ -1,6 +1,7 @@
 package org.dev.jesen.advancewebview.ui
 
 import android.os.Bundle
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,7 @@ import org.dev.jesen.advancewebview.advance.bridge.AdvanceJsBridgeHelper
 import org.dev.jesen.advancewebview.advance.client.AdvanceWebViewClient
 import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
 import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
+import org.dev.jesen.advancewebview.advance.helper.AdvanceThreadHelper
 import org.dev.jesen.advancewebview.advance.helper.FileUtils
 import org.dev.jesen.advancewebview.advance.helper.NetWorkUtils
 import org.dev.jesen.advancewebview.advance.widget.AdvanceWebView
@@ -54,8 +56,14 @@ class AdvanceCacheStrategyActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 AdvanceLogUtils.d("CacheStrategyActivity", "onPageFinished 准备注入业务测试")
-                // 注入缓存测试业务 JS
+                // 1. 注入全局工具类 JS
+                mWebView.injectGlobalToolJs()
+                // 2.注入缓存测试业务 JS
                 injectCacheTestBusinessJs()
+                // 额外推送网络状态（补充缓存配置的辅助信息）
+                mWebView.nativeCallJsManager.updateUi(
+                    mapOf("networkState" to if (NetWorkUtils.isNetworkAvailable(mWebView.context)) "已联网" else "未联网")
+                )
             }
 
 
@@ -73,21 +81,20 @@ class AdvanceCacheStrategyActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
      * 注入缓存测试专属业务 JS（传递缓存配置信息）
      */
     private fun injectCacheTestBusinessJs() {
-        val cacheConfigData = AdvanceJsBridgeHelper.toJson(
-            mapOf(
-                "cacheMaxSize" to "100MB",
-                "cacheExpireTime" to "7天",
-                "cacheDir" to FileUtils.getWebViewCacheDir(this).absolutePath,
-                "currentCacheMode" to when (mWebView.settings.cacheMode) {
-                    android.webkit.WebSettings.LOAD_DEFAULT -> "有网加载新数据，无网加载缓存"
-                    android.webkit.WebSettings.LOAD_CACHE_ONLY -> "仅加载缓存，不访问网络"
-                    android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK -> "优先加载缓存，无缓存再访问网络"
-                    android.webkit.WebSettings.LOAD_NO_CACHE -> "不加载缓存，仅访问网络"
-                    else -> "未知缓存模式"
-                }
-            )
+        val cacheConfigData = mapOf(
+            "cacheMaxSize" to "100MB",
+            "cacheExpireTime" to "7天",
+            "cacheDir" to FileUtils.getWebViewCacheDir(this).absolutePath,
+            "currentCacheMode" to getCacheModeDesc()
         )
-        mWebView.injectBusinessJs(cacheConfigData)
+        val cacheConfig = AdvanceJsBridgeHelper.toJson(cacheConfigData)
+        mWebView.injectBusinessJs(cacheConfig)
+
+        // 核心优化：注入后主动推送配置给 H5（复用 updateUi 公共方法）
+        AdvanceThreadHelper.runOnMainThread {
+            mWebView.nativeCallJsManager.updateUi(cacheConfigData)
+        }
+        AdvanceLogUtils.d("CacheStrategyActivity", "已主动推送缓存配置给 H5")
     }
 
     private fun initView() {
@@ -97,6 +104,10 @@ class AdvanceCacheStrategyActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
             mWebView.clearAllAdvanceCache()
             // 通知 JS 缓存清理完成
             mWebView.nativeCallJsManager.notifyCacheState("缓存已全部清理（原生主动触发）")
+            // 推送更新后的缓存模式（若有变化）
+            mWebView.nativeCallJsManager.updateUi(
+                mapOf("currentCacheMode" to getCacheModeDesc())
+            )
             Toast.makeText(this, "缓存清理完成", Toast.LENGTH_SHORT).show()
         }
         binding.btnTestOfflineCache.setOnClickListener {
@@ -104,7 +115,25 @@ class AdvanceCacheStrategyActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
             mWebView.settings.cacheMode = android.webkit.WebSettings.LOAD_CACHE_ONLY
             // 重新加载页面验证离线缓存
             mWebView.loadAdvancePage(AdvanceConstants.LOCAL_HTML_CACHE)
+            // 复用 notifyCacheState 和 updateUi 公共方法
+            mWebView.nativeCallJsManager.notifyCacheState("已切换为离线缓存模式，重新加载页面")
+            mWebView.nativeCallJsManager.updateUi(
+                mapOf("currentCacheMode" to "仅加载缓存，不访问网络")
+            )
             Toast.makeText(this, "已切换为离线缓存模式，重新加载页面", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * 复用缓存模式描述转换方法，避免重复
+     */
+    private fun getCacheModeDesc(): String {
+        return when (mWebView.settings.cacheMode) {
+            WebSettings.LOAD_DEFAULT -> "有网加载新数据，无网加载缓存"
+            WebSettings.LOAD_CACHE_ONLY -> "仅加载缓存，不访问网络"
+            WebSettings.LOAD_CACHE_ELSE_NETWORK -> "优先加载缓存，无缓存再访问网络"
+            WebSettings.LOAD_NO_CACHE -> "不加载缓存，仅访问网络"
+            else -> "未知缓存模式"
         }
     }
 

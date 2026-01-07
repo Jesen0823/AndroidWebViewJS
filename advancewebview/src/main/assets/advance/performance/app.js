@@ -162,40 +162,16 @@ function initPerfMetrics() {
 // ---------------------- 原生调用 JS 的方法 ----------------------
 window.callAdvanceJs = function(methodName, params) {
     try {
-        const paramsObj = JSON.parse(params);
+        const paramsObj = typeof params === 'string'
+              ? JSON.parse(params.trim())
+              : (typeof params === 'object' ? params : {});
         switch (methodName) {
             case "notifyAdvanceCacheState":
                 logInfo(`性能影响：${paramsObj}`);
                 break;
             case "updateAdvanceUi":
-                try{
-                    const config = typeof params === "string" ? JSON.parse(params) : params;
-                    logInfo(`收到原生推送的性能配置：${JSON.stringify(config)}`);
-                    // 实时更新渲染模式
-                    const renderModeDom = document.getElementById("renderMode");
-                    if (renderModeDom && config.hardwareAcceleration !== undefined) {
-                        renderModeDom.innerText = config.hardwareAcceleration === "true" ? "硬件加速" : "软件渲染";
-                        logSuccess(`渲染模式更新：${renderModeDom.innerText}`);
-                    }
-                    // 实时更新图片加载状态
-                    const imageStateDom = document.getElementById("imageState");
-                    if (imageStateDom && config.imageLoadingEnabled !== undefined) {
-                        imageStateDom.innerText = config.imageLoadingEnabled === "true" ? "已启用" : "已禁用";
-                        logSuccess(`图片加载状态更新：${imageStateDom.innerText}`);
-                    }
-                    // 实时更新缓存模式
-                    const cacheModeDom = document.getElementById("cacheMode");
-                    if (cacheModeDom && config.cacheMode) {
-                        cacheModeDom.innerText = config.cacheMode;
-                        logSuccess(`缓存模式更新：${renderModeDom.innerText}`);
-                    }
-                    // 其他配置更新（可选）
-                    if (config.renderPriority) {
-                        logSuccess(`渲染优先级：${config.renderPriority}`);
-                    }
-                } catch (e) {
-                    logError(`解析性能配置失败：${e.message}`);
-                }
+                // 复用全局UI更新方法，消除冗余
+                window.updateAdvanceUi(paramsObj);
                 break;
             default:
                 logInfo(`未知原生调用方法：${methodName}`);

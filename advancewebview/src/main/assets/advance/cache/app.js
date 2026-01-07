@@ -1,163 +1,223 @@
-/**
- * 缓存策略测试 JS - 修复版
- * 修复点：1. 移除jQuery 2. 全局暴露所有缓存操作方法 3. 实时更新缓存状态文案
- */
-//const AdvanceGlobalTool = window.AdvanceGlobalTool;
-//const AdvanceBusinessLogic = window.AdvanceBusinessLogic;
-const CACHE_TEST_KEY = "advance_cache_test_key";
+'use strict';
 
 /**
- * 实时获取注入的全局工具类（带重试）
- * @param {number} retryTimes 重试次数（默认1次）
- * @returns {Object|null}
+ * 缓存策略测试 JS - 规范优化版
+ * 核心优化：修复Android交互逻辑+消除冗余+强化错误处理
  */
-function getAdvanceGlobalTool(retryTimes = 1) {
-    const tool = window.AdvanceGlobalTool;
-    if (tool) return tool;
-    
-    // 重试逻辑：若未获取到，延迟 100ms 重试（仅重试1次）
-    if (retryTimes > 0) {
-        setTimeout(() => {
-            return getAdvanceGlobalTool(retryTimes - 1);
-        }, 100);
-    }
-    console.warn ("AdvanceGlobalTool 未注入");
-    return null;
+const CACHE_CONST = {
+  TEST_KEY: "advance_cache_test_key",
+  RETRY_DELAY: 100, // 重试延迟(ms)
+  MAX_RETRY: 2      // 最大重试次数
+};
+
+// DOM元素缓存（避免重复查询）
+const DOM_CACHE = {
+  cacheMaxSize: document.getElementById('cacheMaxSize'),
+  cacheExpireTime: document.getElementById('cacheExpireTime'),
+  cacheDir: document.getElementById('cacheDir'),
+  cacheMode: document.getElementById('cacheMode'),
+  networkState: document.getElementById('networkState'),
+  advanceInjectResult: document.getElementById('advanceInjectResult'),
+  btnTestCacheLoad: document.getElementById('btnTestCacheLoad'),
+  btnClearCache: document.getElementById('btnClearCache'),
+  btnSaveCacheData: document.getElementById('btnSaveCacheData'),
+  btnGetCacheData: document.getElementById('btnGetCacheData')
+};
+
+/**
+ * 异步获取原生工具类（Promise化重试，适配Android注入延迟）
+ * @returns {Promise<Object>} AdvanceGlobalTool
+ */
+async function getAdvanceGlobalTool() {
+  let retryCount = 0;
+  while (retryCount < CACHE_CONST.MAX_RETRY) {
+    if (window.AdvanceGlobalTool) return window.AdvanceGlobalTool;
+    await new Promise(resolve => setTimeout(resolve, CACHE_CONST.RETRY_DELAY));
+    retryCount++;
+  }
+  console.warn('AdvanceGlobalTool 未注入（已重试最大次数）');
+  throw new Error('AdvanceGlobalTool 注入失败');
 }
 
 /**
- * 实时获取注入的业务逻辑类（带重试）
- * @param {number} retryTimes 重试次数（默认1次）
- * @returns {Object|null} 注入的 AdvanceBusinessLogic 或 null
+ * 异步获取原生业务逻辑类（Promise化重试）
+ * @returns {Promise<Object>} AdvanceBusinessLogic
  */
-function getAdvanceBusinessLogic(retryTimes = 1) {
-    const tool = window.AdvanceBusinessLogic;
-    if (tool) return tool;
-    
-    // 重试逻辑：若未获取到，延迟 100ms 重试（仅重试1次）
-    if (retryTimes > 0) {
-        setTimeout(() => {
-            return getAdvanceBusinessLogic(retryTimes - 1);
-        }, 100);
-    }
-    console.warn ("AdvanceBusinessLogic 未注入");
-    return null;
+async function getAdvanceBusinessLogic() {
+  let retryCount = 0;
+  while (retryCount < CACHE_CONST.MAX_RETRY) {
+    if (window.AdvanceBusinessLogic) return window.AdvanceBusinessLogic;
+    await new Promise(resolve => setTimeout(resolve, CACHE_CONST.RETRY_DELAY));
+    retryCount++;
+  }
+  console.warn('AdvanceBusinessLogic 未注入（已重试最大次数）');
+  throw new Error('AdvanceBusinessLogic 注入失败');
 }
 
-// ---------------------- 全局暴露缓存操作方法 ----------------------
-window.callTestCacheLoad = function() {
-    logInfo("开始测试缓存加载，即将刷新页面...");
-    location.reload();
-};
+// ---------------------- 日志工具 ----------------------
+function appendResult(html) {
+  if (!DOM_CACHE.advanceInjectResult) return;
+  DOM_CACHE.advanceInjectResult.innerHTML += `${html}<br/>`;
+  DOM_CACHE.advanceInjectResult.scrollTop = DOM_CACHE.advanceInjectResult.scrollHeight;
+}
 
-window.callClearCache = function() {
-    const globalTool = getAdvanceGlobalTool(); // 实时获取
-    if (globalTool) {
-        globalTool.clearCache();
-        logSuccess("请求原生清理所有缓存");
-    } else {
-        logError("无法调用 clearCache：AdvanceGlobalTool 未注入");
-    }
-};
-
-window.callSaveCacheData = function() {
-    const cacheValue = "cache_test_value_" + new Date().getTime();
-    const globalTool = getAdvanceGlobalTool(); // 实时获取
-    if (globalTool) {
-        globalTool.setStorage(CACHE_TEST_KEY, cacheValue);
-        logSuccess(`保存测试缓存数据：${CACHE_TEST_KEY}=${cacheValue}`);
-    } else {
-        logError("无法调用 setStorage：AdvanceGlobalTool 未注入");
-    }
-};
-
-window.callGetCacheData = function() {
-    const globalTool = getAdvanceGlobalTool(); // 实时获取
-    if (globalTool) {
-        globalTool.getStorage(CACHE_TEST_KEY);
-        logInfo(`获取测试缓存数据：${CACHE_TEST_KEY}`);
-    } else {
-        logError("无法调用 getStorage：AdvanceGlobalTool 未注入");
-    }
-};
-
-// ---------------------- 辅助方法 ----------------------
 function logInfo(content) {
-    appendResult(`<span class="info">[CACHE-INFO] ${new Date().toLocaleTimeString()}：${content}</span>`);
+  appendResult(`<span class="info">[CACHE-INFO] ${new Date().toLocaleTimeString()}：${content}</span>`);
 }
 
 function logSuccess(content) {
-    appendResult(`<span class="success">[CACHE-SUCCESS] ${new Date().toLocaleTimeString()}：${content}</span>`);
+  appendResult(`<span class="success">[CACHE-SUCCESS] ${new Date().toLocaleTimeString()}：${content}</span>`);
 }
 
 function logError(content) {
-    appendResult(`<span class="error">[CACHE-ERROR] ${new Date().toLocaleTimeString()}：${content}</span>`);
+  appendResult(`<span class="error">[CACHE-ERROR] ${new Date().toLocaleTimeString()}：${content}</span>`);
 }
 
-function appendResult(html) {
-    const resultDom = document.getElementById("advanceInjectResult");
-    if (resultDom) {
-        resultDom.innerHTML += `${html}<br/>`;
-        resultDom.scrollTop = resultDom.scrollHeight;
-    }
-}
+// ---------------------- UI更新核心方法（全局暴露给Android） ----------------------
+window.updateAdvanceUi = function(params) {
+  try {
+    // 防御性解析Android传递的参数（兼容JSON字符串/对象）
+    const config = typeof params === 'string' 
+      ? JSON.parse(params.trim()) 
+      : (typeof params === 'object' ? params : {});
+    
+    logInfo(`收到Android推送数据：${JSON.stringify(config)}`);
 
-function initCacheConfig() {
-    if (AdvanceBusinessLogic && AdvanceBusinessLogic.businessData) {
-        const cacheData = AdvanceBusinessLogic.businessData;
-        const maxSizeDom = document.getElementById("cacheMaxSize");
-        const expireDom = document.getElementById("cacheExpireTime");
-        const dirDom = document.getElementById("cacheDir");
-        const modeDom = document.getElementById("cacheMode");
-        if (maxSizeDom) maxSizeDom.innerText = cacheData.cacheMaxSize || "未知";
-        if (expireDom) expireDom.innerText = cacheData.cacheExpireTime || "未知";
-        if (dirDom) dirDom.innerText = cacheData.cacheDir || "未知";
-        if (modeDom) modeDom.innerText = cacheData.currentCacheMode || "未知";
-        logSuccess("缓存配置信息加载完成");
-    } else {
-        logError("无法获取缓存配置：AdvanceBusinessLogic 未注入");
+    // 更新UI（复用DOM缓存）
+    if (DOM_CACHE.cacheMaxSize && config.cacheMaxSize) {
+      DOM_CACHE.cacheMaxSize.innerText = config.cacheMaxSize;
     }
-}
-
-function checkLocalCacheData() {
-    const globalTool = getAdvanceGlobalTool(); // 实时获取
-    if (globalTool) {
-        const cacheValue = globalTool.getStorage(CACHE_TEST_KEY);
-        cacheValue ? logSuccess(`检测到本地缓存数据：${CACHE_TEST_KEY}=${cacheValue}`) : logInfo(`未检测到本地缓存数据：${CACHE_TEST_KEY}`);
+    if (DOM_CACHE.cacheExpireTime && config.cacheExpireTime) {
+      DOM_CACHE.cacheExpireTime.innerText = config.cacheExpireTime;
     }
-}
-
-// ---------------------- 原生调用 JS 的方法 ----------------------
-window.callAdvanceJs = function(methodName, params) {
-    try {
-        const paramsObj = JSON.parse(params);
-        switch (methodName) {
-            case "notifyAdvanceCacheState":
-                logSuccess(`缓存状态通知：${paramsObj}`);
-                if (paramsObj.networkState) {
-                    const networkDom = document.getElementById("networkState");
-                    if (networkDom) networkDom.innerText = paramsObj.networkState;
-                    logInfo(`网络状态更新：${paramsObj.networkState}`);
-                }
-                break;
-            case "updateAdvanceUi":
-                if (paramsObj.currentCacheMode) {
-                    const modeDom = document.getElementById("cacheMode");
-                    if (modeDom) modeDom.innerText = paramsObj.currentCacheMode;
-                    logSuccess(`缓存模式更新：${paramsObj.currentCacheMode}`);
-                }
-                break;
-            default:
-                logInfo(`未知原生调用方法：${methodName}`);
-        }
-    } catch (e) {
-        logError(`解析原生调用参数失败：${e.message}`);
+    if (DOM_CACHE.cacheDir && config.cacheDir) {
+      DOM_CACHE.cacheDir.innerText = config.cacheDir;
     }
+    if (DOM_CACHE.cacheMode && config.currentCacheMode) {
+      DOM_CACHE.cacheMode.innerText = config.currentCacheMode;
+    }
+    if (DOM_CACHE.networkState && config.networkState) {
+      DOM_CACHE.networkState.innerText = config.networkState;
+    }
+  } catch (e) {
+    logError(`解析Android参数失败：${e.message}`);
+  }
 };
 
-// ---------------------- DOM 就绪初始化 ----------------------
-document.addEventListener('DOMContentLoaded', function() {
-    logInfo("缓存测试页面初始化完成，开始加载缓存配置...");
-    initCacheConfig();
-    checkLocalCacheData();
+// ---------------------- 缓存操作方法（供按钮调用） ----------------------
+async function callTestCacheLoad() {
+  logInfo('开始测试缓存加载，即将刷新页面...');
+  setTimeout(() => location.reload(), 300);
+}
+
+async function callClearCache() {
+  const btn = DOM_CACHE.btnClearCache;
+  if (btn) btn.disabled = true; // 防重复点击
+  try {
+    const globalTool = await getAdvanceGlobalTool();
+    globalTool.clearCache();
+    logSuccess('请求Android清理所有缓存');
+  } catch (e) {
+    logError(`调用clearCache失败：${e.message}`);
+  } finally {
+    if (btn) setTimeout(() => btn.disabled = false, 1000);
+  }
+}
+
+async function callSaveCacheData() {
+  const btn = DOM_CACHE.btnSaveCacheData;
+  if (btn) btn.disabled = true;
+  try {
+    const cacheValue = `cache_test_value_${new Date().getTime()}`;
+    const globalTool = await getAdvanceGlobalTool();
+    globalTool.setStorage(CACHE_CONST.TEST_KEY, cacheValue);
+    logSuccess(`保存测试缓存：${CACHE_CONST.TEST_KEY}=${cacheValue}`);
+  } catch (e) {
+    logError(`调用setStorage失败：${e.message}`);
+  } finally {
+    if (btn) setTimeout(() => btn.disabled = false, 1000);
+  }
+}
+
+async function callGetCacheData() {
+  const btn = DOM_CACHE.btnGetCacheData;
+  if (btn) btn.disabled = true;
+  try {
+    const globalTool = await getAdvanceGlobalTool();
+    const cacheValue = await globalTool.getStorage(CACHE_CONST.TEST_KEY);
+    cacheValue 
+      ? logSuccess(`获取缓存数据：${CACHE_CONST.TEST_KEY}=${cacheValue}`)
+      : logInfo(`缓存数据不存在：${CACHE_CONST.TEST_KEY}`);
+  } catch (e) {
+    logError(`调用getStorage失败：${e.message}`);
+  } finally {
+    if (btn) setTimeout(() => btn.disabled = false, 1000);
+  }
+}
+
+/**
+ * 检测本地缓存数据
+ */
+async function checkLocalCacheData() {
+  try {
+    const globalTool = await getAdvanceGlobalTool();
+    const cacheValue = await globalTool.getStorage(CACHE_CONST.TEST_KEY);
+    cacheValue 
+      ? logSuccess(`检测到缓存：${CACHE_CONST.TEST_KEY}=${cacheValue}`)
+      : logInfo(`未检测到缓存：${CACHE_CONST.TEST_KEY}`);
+  } catch (e) {
+    logError(`检测缓存失败：${e.message}`);
+  }
+}
+
+// ---------------------- Android调用JS的统一入口 ----------------------
+window.callAdvanceJs = function(methodName, params) {
+  try {
+    const paramsObj = typeof params === 'string' 
+      ? JSON.parse(params.trim()) 
+      : (typeof params === 'object' ? params : {});
+    
+    switch (methodName) {
+      case 'notifyAdvanceCacheState':
+        logSuccess(`缓存状态通知：${JSON.stringify(paramsObj)}`);
+        if (paramsObj.networkState && DOM_CACHE.networkState) {
+          DOM_CACHE.networkState.innerText = paramsObj.networkState;
+          logInfo(`网络状态更新：${paramsObj.networkState}`);
+        }
+        break;
+      case 'updateAdvanceUi':
+        // 复用全局UI更新方法，消除冗余
+        window.updateAdvanceUi(paramsObj);
+        break;
+      default:
+        logInfo(`未知Android调用方法：${methodName}`);
+    }
+  } catch (e) {
+    logError(`解析Android调用参数失败：${e.message}`);
+  }
+};
+
+// ---------------------- 初始化 ----------------------
+document.addEventListener('DOMContentLoaded', async function() {
+  logInfo('缓存测试页面初始化完成，等待Android交互...');
+
+  // 绑定按钮事件（解耦HTML与JS）
+  DOM_CACHE.btnTestCacheLoad?.addEventListener('click', callTestCacheLoad);
+  DOM_CACHE.btnClearCache?.addEventListener('click', callClearCache);
+  DOM_CACHE.btnSaveCacheData?.addEventListener('click', callSaveCacheData);
+  DOM_CACHE.btnGetCacheData?.addEventListener('click', callGetCacheData);
+
+  // 初始加载Android注入的缓存配置
+  try {
+    const businessLogic = await getAdvanceBusinessLogic();
+    if (businessLogic?.businessData) {
+      window.updateAdvanceUi(businessLogic.businessData);
+      logSuccess('从Android BusinessLogic读取初始缓存配置');
+    }
+  } catch (e) {
+    logInfo(`等待Android推送缓存配置：${e.message}`);
+  }
+
+  // 检测本地缓存
+  await checkLocalCacheData();
 });

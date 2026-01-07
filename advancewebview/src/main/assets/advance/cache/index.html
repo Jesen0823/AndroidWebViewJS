@@ -1,68 +1,69 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advance WebView - 缓存策略测试</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Advance WebView - 缓存策略测试</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="header">
-    <h1>Advance Enterprise WebView</h1>
+  <header class="header">
+    <h1>Advance WebView</h1>
     <p>缓存策略测试：有网/无网缓存 + 缓存清理 + 过期管理</p>
-</div>
+  </header>
 
-<div class="card">
+  <section class="card">
     <div class="card-title">缓存配置信息</div>
     <div class="cache-info">
-        <div class="cache-item">
-            <div class="cache-label">最大缓存大小</div>
-            <div id="cacheMaxSize" class="cache-value">未知</div>
-        </div>
-        <div class="cache-item">
-            <div class="cache-label">缓存过期时间</div>
-            <div id="cacheExpireTime" class="cache-value">未知</div>
-        </div>
-        <div class="cache-item">
-            <div class="cache-label">缓存目录</div>
-            <div id="cacheDir" class="cache-value">未知</div>
-        </div>
-        <div class="cache-item">
-            <div class="cache-label">当前缓存模式</div>
-            <div id="cacheMode" class="cache-value">未知</div>
-        </div>
+      <div class="cache-item">
+        <div class="cache-label">最大缓存大小</div>
+        <div id="cacheMaxSize" class="cache-value">未知</div>
+      </div>
+      <div class="cache-item">
+        <div class="cache-label">缓存过期时间</div>
+        <div id="cacheExpireTime" class="cache-value">未知</div>
+      </div>
+      <div class="cache-item">
+        <div class="cache-label">缓存目录</div>
+        <div id="cacheDir" class="cache-value">未知</div>
+      </div>
+      <div class="cache-item">
+        <div class="cache-label">当前缓存模式</div>
+        <div id="cacheMode" class="cache-value">未知</div>
+      </div>
     </div>
-</div>
+  </section>
 
-<div class="card">
+  <section class="card">
     <div class="card-title">缓存操作</div>
     <div class="cache-btn-group">
-        <button class="btn" onclick="callTestCacheLoad()">测试缓存加载（刷新页面）</button>
-        <button class="btn" onclick="callClearCache()">清理所有缓存（调用原生）</button>
-        <button class="btn" onclick="callSaveCacheData()">保存测试缓存数据</button>
-        <button class="btn btn-secondary" onclick="callGetCacheData()">获取测试缓存数据</button>
+      <button id="btnTestCacheLoad" class="btn">测试缓存加载（刷新页面）</button>
+      <button id="btnClearCache" class="btn">清理所有缓存（调用原生）</button>
+      <button id="btnSaveCacheData" class="btn">保存测试缓存数据</button>
+      <button id="btnGetCacheData" class="btn btn-secondary">获取测试缓存数据</button>
     </div>
-</div>
+  </section>
 
-<div class="card">
+  <section class="card">
     <div class="card-title">网络状态</div>
     <div class="cache-item">
-        <div class="cache-label">当前网络状态</div>
-        <div id="networkState" class="cache-value">检测中...</div>
+      <div class="cache-label">当前网络状态</div>
+      <div id="networkState" class="cache-value">检测中...</div>
     </div>
-</div>
+  </section>
 
-<div class="card">
+  <section class="card">
     <div class="card-title">缓存日志</div>
     <div id="advanceInjectResult" class="result-area">
-        <p class="info">页面加载完成，等待监控缓存状态...</p>
+      <p class="info">页面加载完成，等待监控缓存状态...</p>
     </div>
-</div>
+  </section>
 
-<div class="footer">
+  <footer class="footer">
     © 2024 Advance Enterprise WebView | 企业级 WebView 缓存策略方案
-</div>
+  </footer>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
