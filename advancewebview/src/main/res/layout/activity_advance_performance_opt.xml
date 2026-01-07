@@ -13,6 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnTestHardwareAcceleration"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnTestCacheMode"
         android:layout_marginVertical="12dp"
         android:text="启用/禁用图片加载"/>
     <Button
@@ -25,6 +26,17 @@
         android:layout_marginVertical="12dp"
         android:text="切换硬件加速/软件"/>
 
+    <Button
+        android:id="@+id/btnTestCacheMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnToggleImage"
+        app:layout_constraintBottom_toTopOf="@id/webView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="6dp"
+        android:text="切换缓存策略"/>
+
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/pbPageLoad"
         android:layout_width="match_parent"
@@ -33,7 +45,7 @@
         android:paddingVertical="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnToggleImage"
+        app:layout_constraintTop_toBottomOf="@id/btnTestCacheMode"
         app:layout_constraintBottom_toTopOf="@id/webView"/>
 
     <org.dev.jesen.advancewebview.advance.widget.AdvanceWebView

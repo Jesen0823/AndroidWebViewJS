@@ -21,7 +21,7 @@ class AdvanceNativeCallJsManager(
         AdvanceThreadHelper.runOnMainThread(webView.context) {
             jsBridge.callAdvanceJs(webView, AdvanceConstants.NATIVE_METHOD_UPDATE_UI, params)
         }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 更新 UI 完成")
+        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 更新 UI 完成，参数：$params")
     }
 
     /**

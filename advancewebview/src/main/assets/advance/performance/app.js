@@ -44,6 +44,41 @@ function getAdvanceBusinessLogic(retryTimes = 1) {
     return null;
 }
 
+/**
+ * 接收原生推送的性能配置（实时更新 UI）
+ */
+window.updateAdvanceUi = function(params) {
+    try {
+        const config = typeof params === "string" ? JSON.parse(params) : params;
+        logInfo(`收到原生推送的性能配置：${JSON.stringify(config)}`);
+
+        // 实时更新渲染模式
+        const renderModeDom = document.getElementById("renderMode");
+        if (renderModeDom && config.hardwareAcceleration !== undefined) {
+            renderModeDom.innerText = config.hardwareAcceleration === "true" ? "硬件加速" : "软件渲染";
+        }
+
+        // 实时更新图片加载状态
+        const imageStateDom = document.getElementById("imageState");
+        if (imageStateDom && config.imageLoadingEnabled !== undefined) {
+            imageStateDom.innerText = config.imageLoadingEnabled === "true" ? "已启用" : "已禁用";
+        }
+
+        // 实时更新缓存模式
+        const cacheModeDom = document.getElementById("cacheMode");
+        if (cacheModeDom && config.cacheMode) {
+            cacheModeDom.innerText = config.cacheMode;
+        }
+
+        // 其他配置更新（可选）
+        if (config.renderPriority) {
+            logSuccess(`渲染优先级：${config.renderPriority}`);
+        }
+    } catch (e) {
+        logError(`解析性能配置失败：${e.message}`);
+    }
+};
+
 // ---------------------- 关键修复：提前定义 logImageLoad ----------------------
 window.logImageLoad = function(imageIndex) {
     logSuccess(`图片 ${imageIndex} 加载完成`);
@@ -63,8 +98,27 @@ window.updatePageProgress = function(progress) {
         progressDom.innerText = `${progress}%`;
         fillDom.style.width = `${progress}%`;
     }
-    progress === 100 ? logSuccess("页面加载完成，进度 100%") : logInfo(`页面加载中，进度 ${progress}%`);
+    if (progress === 100) {
+        logSuccess("页面加载完成，进度 100%");
+        // 计算首屏加载时间
+        calculateFirstLoadTime();
+    } else {
+        logInfo(`页面加载中，进度 ${progress}%`);
+    }
 };
+
+/**
+ * 计算首屏加载时间
+ */
+function calculateFirstLoadTime() {
+    const pageLoadStartTime = window.pageLoadStartTime || Date.now();
+    const firstLoadTime = (Date.now() - pageLoadStartTime) / 1000;
+    const firstLoadDom = document.getElementById("firstLoadTime");
+    if (firstLoadDom) {
+        firstLoadDom.innerText = `${firstLoadTime.toFixed(2)} 秒`;
+    }
+    logSuccess(`首屏加载完成，耗时：${firstLoadTime.toFixed(2)} 秒`);
+}
 
 // ---------------------- 辅助方法 ----------------------
 function logInfo(content) {
@@ -114,19 +168,33 @@ window.callAdvanceJs = function(methodName, params) {
                 logInfo(`性能影响：${paramsObj}`);
                 break;
             case "updateAdvanceUi":
-                if (paramsObj.hardwareAcceleration) {
+                try{
+                    const config = typeof params === "string" ? JSON.parse(params) : params;
+                    logInfo(`收到原生推送的性能配置：${JSON.stringify(config)}`);
+                    // 实时更新渲染模式
                     const renderModeDom = document.getElementById("renderMode");
-                    if (renderModeDom) {
-                        renderModeDom.innerText = paramsObj.hardwareAcceleration === "true" ? "硬件加速" : "软件渲染";
+                    if (renderModeDom && config.hardwareAcceleration !== undefined) {
+                        renderModeDom.innerText = config.hardwareAcceleration === "true" ? "硬件加速" : "软件渲染";
                         logSuccess(`渲染模式更新：${renderModeDom.innerText}`);
                     }
-                }
-                if (paramsObj.imageLoadingEnabled) {
+                    // 实时更新图片加载状态
                     const imageStateDom = document.getElementById("imageState");
-                    if (imageStateDom) {
-                        imageStateDom.innerText = paramsObj.imageLoadingEnabled === "true" ? "已启用" : "已禁用";
+                    if (imageStateDom && config.imageLoadingEnabled !== undefined) {
+                        imageStateDom.innerText = config.imageLoadingEnabled === "true" ? "已启用" : "已禁用";
                         logSuccess(`图片加载状态更新：${imageStateDom.innerText}`);
                     }
+                    // 实时更新缓存模式
+                    const cacheModeDom = document.getElementById("cacheMode");
+                    if (cacheModeDom && config.cacheMode) {
+                        cacheModeDom.innerText = config.cacheMode;
+                        logSuccess(`缓存模式更新：${renderModeDom.innerText}`);
+                    }
+                    // 其他配置更新（可选）
+                    if (config.renderPriority) {
+                        logSuccess(`渲染优先级：${config.renderPriority}`);
+                    }
+                } catch (e) {
+                    logError(`解析性能配置失败：${e.message}`);
                 }
                 break;
             default:
@@ -139,14 +207,25 @@ window.callAdvanceJs = function(methodName, params) {
 
 // ---------------------- DOM 就绪初始化 ----------------------
 document.addEventListener('DOMContentLoaded', function() {
-    logInfo("性能测试页面初始化完成，开始监控性能指标...");
-    logInfo(`页面加载开始时间：${new Date(pageLoadStartTime).toLocaleTimeString()}`);
+    // 记录页面加载开始时间
+    window.pageLoadStartTime = Date.now();
+    logInfo("性能测试页面初始化完成，等待接收原生数据...");
+
+    // 初始检测注入模块（兼容初始数据）
+    if (getAdvanceGlobalTool()) {
+        logSuccess("AdvanceGlobalTool 注入成功（全局工具类）");
+    } else {
+        logInfo("AdvanceGlobalTool 暂未注入，等待原生推送数据...");
+    }
     initPerfMetrics();
-    // 计算首屏加载时间
-    setTimeout(() => {
-        const firstLoadTime = (new Date().getTime() - pageLoadStartTime) / 1000;
-        const firstLoadDom = document.getElementById("firstLoadTime");
-        if (firstLoadDom) firstLoadDom.innerText = `${firstLoadTime.toFixed(2)} 秒`;
-        logSuccess(`首屏加载完成，耗时：${firstLoadTime.toFixed(2)} 秒`);
-    }, 2000);
+    if (getAdvanceBusinessLogic()) {
+        logSuccess("AdvanceBusinessLogic 注入成功（业务逻辑类）");
+        // 尝试从业务模块获取初始配置
+        const businessLogic = getAdvanceBusinessLogic();
+        if (businessLogic.businessData) {
+            window.updateAdvanceUi(businessLogic.businessData);
+        }
+    } else {
+        logInfo("AdvanceBusinessLogic 暂未注入，等待原生推送数据...");
+    }
 });

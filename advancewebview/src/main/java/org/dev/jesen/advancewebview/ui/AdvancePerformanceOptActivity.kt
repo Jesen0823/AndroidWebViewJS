@@ -3,6 +3,8 @@ package org.dev.jesen.advancewebview.ui
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebSettings
+import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +14,10 @@ import org.dev.jesen.advancewebview.R
 import org.dev.jesen.advancewebview.advance.bridge.AdvanceJsBridge
 import org.dev.jesen.advancewebview.advance.bridge.AdvanceJsBridgeHelper
 import org.dev.jesen.advancewebview.advance.client.AdvanceWebChromeClient
+import org.dev.jesen.advancewebview.advance.client.AdvanceWebViewClient
 import org.dev.jesen.advancewebview.advance.constant.AdvanceConstants
 import org.dev.jesen.advancewebview.advance.helper.AdvanceLogUtils
+import org.dev.jesen.advancewebview.advance.helper.AdvanceThreadHelper
 import org.dev.jesen.advancewebview.advance.widget.AdvanceWebView
 import org.dev.jesen.advancewebview.databinding.ActivityAdvancePerformanceOptBinding
 
@@ -51,7 +55,7 @@ class AdvancePerformanceOptActivity : AppCompatActivity(), AdvanceJsBridge.OnJsC
     private fun loadPerformanceHtml() {
         val performanceHtmlUrl = AdvanceConstants.LOCAL_HTML_PERFORMANCE
         mWebView.loadAdvancePage(performanceHtmlUrl)
-        AdvanceLogUtils.d("AdvancePerformanceOptActivity", "性能测试 H5 页面加载中：$performanceHtmlUrl")
+        AdvanceLogUtils.d("PerformanceOptActivity", "性能测试 H5 页面加载中：$performanceHtmlUrl")
     }
 
     private fun initView() {
@@ -65,19 +69,31 @@ class AdvancePerformanceOptActivity : AppCompatActivity(), AdvanceJsBridge.OnJsC
             Toast.makeText(this, tip, Toast.LENGTH_SHORT).show()
             // 通知 JS 图片加载状态变更
             mWebView.nativeCallJsManager.notifyCacheState("图片加载状态：${if (isImageLoadingEnabled) "启用" else "禁用"}")
+            // 核心修改：同步通知 H5 更新图片加载状态
+            pushPerformanceConfigToH5()
         }
         binding.btnTestHardwareAcceleration.setOnClickListener {
             // 切换渲染模式（硬件/软件），测试性能差异
             val currentLayerType = mWebView.layerType
             val newLayerType = if (currentLayerType == android.view.View.LAYER_TYPE_HARDWARE) {
-                android.view.View.LAYER_TYPE_SOFTWARE
+                View.LAYER_TYPE_SOFTWARE
             } else {
-                android.view.View.LAYER_TYPE_HARDWARE
+                View.LAYER_TYPE_HARDWARE
             }
             mWebView.setLayerType(newLayerType, null)
             val tip = if (newLayerType == android.view.View.LAYER_TYPE_HARDWARE) "已切换为硬件加速（渲染更快）" else "已切换为软件渲染（兼容更好）"
             Toast.makeText(this, tip, Toast.LENGTH_SHORT).show()
-            AdvanceLogUtils.d("AdvancePerformanceOptActivity", "渲染模式切换：$tip")
+            AdvanceLogUtils.d("PerformanceOptActivity", "渲染模式切换：$tip")
+        }
+        binding.btnTestCacheMode.setOnClickListener {
+            val newCacheMode = if (mWebView.settings.cacheMode == WebSettings.LOAD_DEFAULT) {
+                WebSettings.LOAD_CACHE_ONLY
+            } else {
+                WebSettings.LOAD_DEFAULT
+            }
+            mWebView.settings.cacheMode = newCacheMode
+            // 同步通知 H5 更新缓存模式
+            pushPerformanceConfigToH5()
         }
     }
 
@@ -93,10 +109,17 @@ class AdvancePerformanceOptActivity : AppCompatActivity(), AdvanceJsBridge.OnJsC
         mWebView.webChromeClient = object : AdvanceWebChromeClient() {
             override fun onProgressChanged(view: android.webkit.WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
+                AdvanceLogUtils.d("PerformanceOptActivity", "页面加载进度：$newProgress%")
+                // 核心修改：主线程调用 H5 方法，传递实时进度
+                AdvanceThreadHelper.runOnMainThread {
+                    view?.evaluateJavascript("javascript:updatePageProgress($newProgress)") {
+                        AdvanceLogUtils.d("PerformanceOptActivity", "进度已推送给 H5：$newProgress%")
+                    }
+                }
                 binding.pbPageLoad.progress = newProgress
                 if (newProgress == 100) {
                     // 页面加载完成，注入性能测试专属 JS
-                    injectPerformanceTestBusinessJs()
+                    pushPerformanceConfigToH5()
                 }
             }
         }
@@ -104,29 +127,71 @@ class AdvancePerformanceOptActivity : AppCompatActivity(), AdvanceJsBridge.OnJsC
         mWebView.settings.setRenderPriority(android.webkit.WebSettings.RenderPriority.HIGH)
         mWebView.settings.setGeolocationEnabled(false)
 
-        AdvanceLogUtils.d("AdvancePerformanceOptActivity", "AdvanceEnterpriseWebView 初始化完成（性能优化强化）")
+        mWebView.webViewClient = object : AdvanceWebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                view?.let {
+                    // 1. 注入全局工具类 JS
+                    mWebView.injectGlobalToolJs()
+                    // 2. 注入业务 JS
+                    injectPerformanceTestBusinessJs()
+                    // 3. 主动推送性能配置（确保 H5 拿到数据）
+                    pushPerformanceConfigToH5()
+                }
+            }
+        }
+
+        AdvanceLogUtils.d("PerformanceOptActivity", "AdvanceEnterpriseWebView 初始化完成（性能优化强化）")
     }
 
     /**
      * 注入性能测试专属业务 JS（传递性能配置信息）
      */
     private fun injectPerformanceTestBusinessJs() {
-        val performanceConfigData = AdvanceJsBridgeHelper.toJson(
+        val businessData = AdvanceJsBridgeHelper.toJson(
             mapOf(
-                "hardwareAcceleration" to (mWebView.layerType == android.view.View.LAYER_TYPE_HARDWARE).toString(),
-                "imageLoadingEnabled" to isImageLoadingEnabled.toString(),
-                "renderPriority" to "HIGH",
-                "pageLoadTimeout" to "${AdvanceConstants.WEBVIEW_LOAD_TIMEOUT / 1000}秒"
+                "injectTime" to System.currentTimeMillis().toString()
             )
         )
+        mWebView.injectBusinessJs(businessData)
+    }
 
-        mWebView.injectBusinessJs(performanceConfigData)
+    /**
+     * 主动推送性能配置给 H5（初始化+状态变更时调用）
+     */
+    private fun pushPerformanceConfigToH5() {
+        val performanceConfig = mapOf(
+            "hardwareAcceleration" to (mWebView.layerType == View.LAYER_TYPE_HARDWARE).toString(),
+            "imageLoadingEnabled" to isImageLoadingEnabled.toString(),
+            "renderPriority" to "HIGH",
+            "pageLoadTimeout" to "${AdvanceConstants.WEBVIEW_LOAD_TIMEOUT / 1000}秒",
+            "cacheMode" to getCacheModeDesc()
+        )
+        // 主线程调用 JS 方法，传递配置数据
+        AdvanceThreadHelper.runOnMainThread {
+            mWebView.nativeCallJsManager.updateUi(performanceConfig)
+            AdvanceLogUtils.d("PerformanceOptActivity", "已推送性能配置给 H5：$performanceConfig")
+        }
+    }
+
+
+    /**
+     * 转换缓存模式为描述文字
+     */
+    private fun getCacheModeDesc(): String {
+        return when (mWebView.settings.cacheMode) {
+            WebSettings.LOAD_DEFAULT -> "有网加载新数据，无网加载缓存"
+            WebSettings.LOAD_CACHE_ONLY -> "仅加载缓存，不访问网络"
+            WebSettings.LOAD_CACHE_ELSE_NETWORK -> "优先加载缓存，无缓存再访问网络"
+            WebSettings.LOAD_NO_CACHE -> "不加载缓存，仅访问网络"
+            else -> "未知缓存模式"
+        }
     }
 
     //-------------------------------------------OnJsCallNativeListener------------------------
     override fun onShowToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        AdvanceLogUtils.d("AdvancePerformanceOptActivity", "JS 调用原生显示 Toast：$message")
+        AdvanceLogUtils.d("PerformanceOptActivity", "JS 调用原生显示 Toast：$message")
     }
 
     override fun onGetDeviceInfo() {
@@ -143,11 +208,11 @@ class AdvancePerformanceOptActivity : AppCompatActivity(), AdvanceJsBridge.OnJsC
         // 清理缓存释放内存，提升性能
         mWebView.clearAllAdvanceCache()
         mWebView.nativeCallJsManager.notifyCacheState("缓存清理完成（释放内存，提升性能）")
-        AdvanceLogUtils.d("AdvancePerformanceOptActivity", "JS 调用原生清理缓存（性能优化）")
+        AdvanceLogUtils.d("PerformanceOptActivity", "JS 调用原生清理缓存（性能优化）")
     }
 
     override fun onUnknownMethod(methodName: String, params: String) {
-        AdvanceLogUtils.w("AdvancePerformanceOptActivity", "未知 JS 方法：$methodName, 参数：$params")
+        AdvanceLogUtils.w("PerformanceOptActivity", "未知 JS 方法：$methodName, 参数：$params")
         Toast.makeText(this, "性能场景未知方法：$methodName", Toast.LENGTH_SHORT).show()
     }
 
