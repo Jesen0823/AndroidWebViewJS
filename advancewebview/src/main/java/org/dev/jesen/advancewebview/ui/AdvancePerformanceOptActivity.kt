@@ -95,6 +95,11 @@ class AdvancePerformanceOptActivity : AppCompatActivity(), AdvanceJsBridge.OnJsC
             // 同步通知 H5 更新缓存模式
             pushPerformanceConfigToH5()
         }
+        // 悬浮按钮：重新加载H5页面
+        binding.fabReload.setOnClickListener {
+            loadPerformanceHtml()
+            Toast.makeText(this, "页面重新加载中...", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
