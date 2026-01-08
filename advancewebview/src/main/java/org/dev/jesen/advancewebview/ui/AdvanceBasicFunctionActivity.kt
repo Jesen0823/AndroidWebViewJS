@@ -46,7 +46,8 @@ class AdvanceBasicFunctionActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
         binding.btnInjectBusiness.setOnClickListener { 
             injectBusinessJs()
         }
-        binding.btnGetDeviceInfo.setOnClickListener { 
+        binding.btnGetDeviceInfo.setOnClickListener {
+            AdvanceLogUtils.d("BasicFunctionActivity", "btnGetDeviceInfo onClick 获取设备信息")
             //调用Js方法获取设备信息
             mWebView.nativeCallJsManager.sendDeviceInfo(getDeviceInfo())
         }
@@ -57,14 +58,7 @@ class AdvanceBasicFunctionActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
         // 初始化 JS 桥接（设置回调监听）
         mWebView.initJsBridge(this)
         // 设置 WebViewClient 监听（页面加载时注入全局 JS）
-        mWebView.webViewClient = object : AdvanceWebViewClient(){
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                AdvanceLogUtils.d("BasicFunctionActivity", "onPageStarted 开始注入全局工具类JS")
-                // 静态注入：全局工具类 JS
-                mWebView.injectGlobalToolJs()
-            }
-        }
+        mWebView.webViewClient = BasicFunctionWebViewClient()
         AdvanceLogUtils.d("BasicFunctionActivity", "AdvanceEnterpriseWebView 初始化完成")
     }
 
@@ -142,5 +136,18 @@ class AdvanceBasicFunctionActivity : AppCompatActivity(), AdvanceJsBridge.OnJsCa
         super.onDestroy()
         // 销毁 WebView，释放所有资源
         mWebView.destroyAdvanceWebView()
+    }
+
+    /**
+     * WebViewClient 子类 - 基础功能测试专用
+     * 避免匿名内部类覆盖原有功能，统一管理 WebView 页面生命周期
+     */
+    private inner class BasicFunctionWebViewClient : AdvanceWebViewClient() {
+        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            AdvanceLogUtils.d("BasicFunctionActivity", "onPageStarted 开始注入全局工具类JS")
+            // 静态注入：全局工具类 JS
+            mWebView.injectGlobalToolJs()
+        }
     }
 }

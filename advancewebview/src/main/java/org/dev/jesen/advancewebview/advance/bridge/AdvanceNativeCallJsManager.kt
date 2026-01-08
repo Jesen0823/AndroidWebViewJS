@@ -17,66 +17,53 @@ class AdvanceNativeCallJsManager(
      * 原生调用 JS 更新 UI
      */
     fun updateUi(data: Map<String, String>) {
-        val params = AdvanceJsBridgeHelper.toJson(data)
-        AdvanceThreadHelper.runOnMainThread(webView.context) {
-            jsBridge.callAdvanceJs(webView, AdvanceConstants.NATIVE_METHOD_UPDATE_UI, params)
-        }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 更新 UI 完成，参数：$params")
+        callJs(AdvanceConstants.NATIVE_METHOD_UPDATE_UI, data, "更新 UI 完成")
     }
 
     /**
      * 原生调用 JS 通知缓存状态
      */
     fun notifyCacheState(cacheState: String) {
-        val params = AdvanceJsBridgeHelper.toJson(cacheState)
-        AdvanceThreadHelper.runOnMainThread(webView.context) {
-            jsBridge.callAdvanceJs(webView, AdvanceConstants.NATIVE_METHOD_NOTIFY_CACHE, params)
-        }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 通知缓存状态：$cacheState")
+        callJs(AdvanceConstants.NATIVE_METHOD_NOTIFY_CACHE, cacheState, "通知缓存状态完成")
     }
 
     /**
      * 原生调用 JS 传递设备信息
      */
     fun sendDeviceInfo(deviceInfo: Map<String, String>) {
-        val params = AdvanceJsBridgeHelper.toJson(deviceInfo.takeIf { it.isNotEmpty() }
-            ?: mapOf("msg" to "无设备信息"))
-        AdvanceThreadHelper.runOnMainThread(webView.context) {
-            jsBridge.callAdvanceJs(webView, AdvanceConstants.JS_METHOD_GET_DEVICE_INFO, params)
-        }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 传递设备信息完成")
+        val safeDeviceInfo = deviceInfo.takeIf { it.isNotEmpty() } ?: mapOf("msg" to "无设备信息")
+        callJs(AdvanceConstants.JS_METHOD_GET_DEVICE_INFO, safeDeviceInfo, "传递设备信息完成")
     }
 
     /**
      * 原生调用 JS 更新安全配置
      */
     fun updateSecurityConfig(config: Map<String, String>) {
-        val params = AdvanceJsBridgeHelper.toJson(config)
-        AdvanceThreadHelper.runOnMainThread(webView.context) {
-            jsBridge.callAdvanceJs(webView, AdvanceConstants.NATIVE_METHOD_UPDATE_SECURITY_CONFIG, params)
-        }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 更新安全配置完成，参数：$params")
+        callJs(AdvanceConstants.NATIVE_METHOD_UPDATE_SECURITY_CONFIG, config, "更新安全配置完成")
     }
 
     /**
      * 原生调用 JS 通知 URL 校验结果
      */
     fun notifyUrlCheckResult(result: Map<String, Any>) {
-        val params = AdvanceJsBridgeHelper.toJson(result)
-        AdvanceThreadHelper.runOnMainThread(webView.context) {
-            jsBridge.callAdvanceJs(webView, AdvanceConstants.NATIVE_METHOD_NOTIFY_URL_CHECK, params)
-        }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 通知 URL 校验结果，参数：$params")
+        callJs(AdvanceConstants.NATIVE_METHOD_NOTIFY_URL_CHECK, result, "通知 URL 校验结果完成")
     }
 
     /**
      * 原生调用 JS 通知 XSS 过滤结果
      */
     fun notifyXssFilterResult(result: Map<String, String>) {
-        val params = AdvanceJsBridgeHelper.toJson(result)
+        callJs(AdvanceConstants.NATIVE_METHOD_NOTIFY_XSS_FILTER, result, "通知 XSS 过滤结果完成")
+    }
+
+    /**
+     * 抽象通用的 JS 调用逻辑
+     */
+    private fun callJs(methodName: String, data: Any, actionDesc: String) {
+        val params = AdvanceJsBridgeHelper.toJson(data)
         AdvanceThreadHelper.runOnMainThread(webView.context) {
-            jsBridge.callAdvanceJs(webView, AdvanceConstants.NATIVE_METHOD_NOTIFY_XSS_FILTER, params)
+            jsBridge.callAdvanceJs(webView, methodName, params)
         }
-        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS 通知 XSS 过滤结果，参数：$params")
+        AdvanceLogUtils.d("NativeCallJsManager", "原生调用 JS $actionDesc，方法：$methodName，参数：$params")
     }
 }
